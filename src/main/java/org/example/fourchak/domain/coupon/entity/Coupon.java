@@ -1,0 +1,44 @@
+package org.example.fourchak.domain.coupon.entity;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.example.fourchak.domain.coupon.dto.CouponCreateRequestDto;
+import org.example.fourchak.domain.store.entity.Store;
+
+@Entity
+@Getter
+@NoArgsConstructor
+@Table(name = "coupon")
+public class Coupon {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Setter
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "store_id")
+    private Store store;
+
+    @Setter
+    @Column(nullable = false)
+    private int discount;
+
+    @Column(nullable = false)
+    private int count;
+
+    public Coupon(CouponCreateRequestDto requestDto) {
+        this.discount = requestDto.getDiscount();
+        this.count = requestDto.getCount();
+    }
+}

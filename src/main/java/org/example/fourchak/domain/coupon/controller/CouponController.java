@@ -1,8 +1,8 @@
 package org.example.fourchak.domain.coupon.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.example.fourchak.common.ResponseMessage;
 import org.example.fourchak.domain.coupon.dto.CouponCreateRequestDto;
-import org.example.fourchak.domain.coupon.dto.CouponResponseDto;
 import org.example.fourchak.domain.coupon.dto.CouponUpdateRequestDto;
 import org.example.fourchak.domain.coupon.service.CouponService;
 import org.example.fourchak.domain.user.enums.UserRole;
@@ -23,10 +23,14 @@ public class CouponController {
     private final CouponService couponService;
 
     @PostMapping("/stores/{storeId}/coupons")
-    ResponseEntity<CouponResponseDto> createCoupon(
+    ResponseMessage<?> createCoupon(
         @PathVariable Long storeId, @RequestBody CouponCreateRequestDto requestDto) {
         Long userId = 1L;   // TODO: JWT 들어오면 변경
-        return ResponseEntity.ok(couponService.createCoupon(userId, storeId, requestDto));
+        return ResponseMessage.builder()
+            .statusCode(200)
+            .data(requestDto)
+            .message("")
+            .build();
     }
 
     @GetMapping("/stores/{storeId}/coupons")

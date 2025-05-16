@@ -6,6 +6,8 @@ import org.example.fourchak.store.dto.request.StoreRequestDto;
 import org.example.fourchak.store.dto.response.StoreResponseDto;
 import org.example.fourchak.store.entity.Store;
 import org.example.fourchak.store.repository.StoreRepository;
+import org.example.fourchak.user.entity.User;
+import org.example.fourchak.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 @Service

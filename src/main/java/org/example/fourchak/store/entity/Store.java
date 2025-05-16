@@ -14,6 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
 import org.example.fourchak.common.BaseEntity;
+import org.example.fourchak.domain.coupon.entity.Coupon;
+import org.example.fourchak.reservation.entity.Reservation;
+import org.example.fourchak.user.entity.User;
 
 @Entity
 @Getter

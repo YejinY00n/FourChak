@@ -28,6 +28,7 @@ public class Coupon {
     @JoinColumn(name = "store_id")
     private Store store;
 
+    @Setter
     @Column(nullable = false)
     private int discount;
 

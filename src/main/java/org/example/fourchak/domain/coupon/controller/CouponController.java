@@ -3,9 +3,12 @@ package org.example.fourchak.domain.coupon.controller;
 import lombok.RequiredArgsConstructor;
 import org.example.fourchak.domain.coupon.dto.CouponCreateRequestDto;
 import org.example.fourchak.domain.coupon.dto.CouponResponseDto;
+import org.example.fourchak.domain.coupon.dto.CouponUpdateRequestDto;
 import org.example.fourchak.domain.coupon.service.CouponService;
+import org.example.fourchak.user.enums.UserRole;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,12 +30,20 @@ public class CouponController {
 
     @GetMapping("/stores/{storeId}/coupons")
     ResponseEntity<?> findCoupon(@PathVariable Long storeId) {
-        UserRole role = USERROLE;   // TODO: JWT 들어오면 변경
-        if (role.eqauls(UserRole.ROLE)) {
+        UserRole role = UserRole.USER;  // TODO: JWT 들어오면 변경
+        if (role.equals(UserRole.USER)) {
             return ResponseEntity.ok(couponService.findCoupon(storeId));
         }
-        if (role.eqauls(UserRole.OWNER)) {
-            return ResponseEntity.ok(couponService.findOwnerCoupon(storeId));
+        if (role.equals(UserRole.ADMIN)) {
+            return ResponseEntity.ok(couponService.findCouponWithAuthor(storeId));
         }
+        return ResponseEntity.badRequest().build();
+    }
+
+    @PatchMapping("/stores/{storeId}/coupons/{couponId}")
+    ResponseEntity<Void> updateCoupon(
+        @PathVariable Long couponId, @RequestBody CouponUpdateRequestDto requestDto) {
+        couponService.updateCoupon(couponId, requestDto);
+        return ResponseEntity.ok().build();
     }
 }

@@ -2,14 +2,16 @@ package org.example.fourchak.domain.coupon.service;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.example.fourchak.domain.coupon.dto.CouponAdminResponseDto;
 import org.example.fourchak.domain.coupon.dto.CouponCreateRequestDto;
-import org.example.fourchak.domain.coupon.dto.CouponOwnerResponseDto;
 import org.example.fourchak.domain.coupon.dto.CouponResponseDto;
+import org.example.fourchak.domain.coupon.dto.CouponUpdateRequestDto;
 import org.example.fourchak.domain.coupon.entity.Coupon;
 import org.example.fourchak.domain.coupon.repository.CouponRepository;
 import org.example.fourchak.store.entity.Store;
 import org.example.fourchak.store.repository.StoreRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -46,15 +48,25 @@ public class CouponService {
     }
 
     // 가게 사장 조회
-    public List<CouponOwnerResponseDto> findOwnerCoupon(Long storeId) {
+    public List<CouponAdminResponseDto> findCouponWithAuthor(Long storeId) {
         Store store = storeRepository.findById(storeId).orElseThrow(
             () -> new IllegalArgumentException("존재하지 않는 가게입니다."));
         List<Coupon> couponList = couponRepository.findAllByStore(store);
         return couponList.stream()
-            .map(CouponOwnerResponseDto::new).toList();
+            .map(CouponAdminResponseDto::new).toList();
+    }
+
+    // 쿠폰 업데이트
+    @Transactional
+    public void updateCoupon(Long couponId, CouponUpdateRequestDto requestDto) {
+        Coupon coupon = couponRepository.findById(couponId).orElseThrow(
+            () -> new IllegalArgumentException("존재하지 않는 쿠폰입니다."));
+        coupon.setDiscount(requestDto.getDiscount());
     }
 
     private boolean isOwnedStore(Long userId, Long targetStoreId) {
-        return storeRepository.findById(targetStoreId).getUser().getId().equals(userId);
+        return storeRepository.findById(targetStoreId).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 가게 입니다."))
+            .getUser().getId().equals(userId);
     }
 }

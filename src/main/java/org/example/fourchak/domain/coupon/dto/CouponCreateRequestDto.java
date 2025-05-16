@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class CouponRequestDto {
+public class CouponCreateRequestDto {
   private final int discount;
-  private final int 
+  private final int count;
 }

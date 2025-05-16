@@ -64,6 +64,14 @@ public class CouponService {
         coupon.setDiscount(requestDto.getDiscount());
     }
 
+    // 쿠폰 삭제
+    @Transactional
+    public void deleteCoupon(Long couponId) {
+        Coupon coupon = couponRepository.findById(couponId).orElseThrow(
+            () -> new IllegalArgumentException("존재하지 않는 쿠폰입니다."));
+        couponRepository.delete(coupon);
+    }
+
     private boolean isOwnedStore(Long userId, Long targetStoreId) {
         return storeRepository.findById(targetStoreId).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 가게 입니다."))

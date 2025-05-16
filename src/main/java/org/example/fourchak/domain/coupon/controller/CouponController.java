@@ -7,6 +7,7 @@ import org.example.fourchak.domain.coupon.dto.CouponUpdateRequestDto;
 import org.example.fourchak.domain.coupon.service.CouponService;
 import org.example.fourchak.user.enums.UserRole;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -44,6 +45,12 @@ public class CouponController {
     ResponseEntity<Void> updateCoupon(
         @PathVariable Long couponId, @RequestBody CouponUpdateRequestDto requestDto) {
         couponService.updateCoupon(couponId, requestDto);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/stores/{storeId}/coupons/{couponId}")
+    ResponseEntity<Void> deleteCoupon(@PathVariable Long couponId) {
+        couponService.deleteCoupon(couponId);
         return ResponseEntity.ok().build();
     }
 }

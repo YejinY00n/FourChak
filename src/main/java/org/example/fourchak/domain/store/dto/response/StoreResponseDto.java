@@ -32,6 +32,6 @@ public class StoreResponseDto {
             .mapToInt(coupon -> coupon.getCount()).sum();
 
         return new StoreResponseDto(store.getId(), store.getStoreName(), store.getNumber(),
-            Integer.parseInt(store.getSeatCount()), totalCouponCount, store.getCreatedAt());
+            store.getSeatCount(), totalCouponCount, store.getCreatedAt());
     }
 }

@@ -12,7 +12,7 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.fourchak.domain.coupon.dto.CouponCreateRequestDto;
-import org.example.fourchak.store.entity.Store;
+import org.example.fourchak.domain.store.entity.Store;
 
 @Entity
 @Getter

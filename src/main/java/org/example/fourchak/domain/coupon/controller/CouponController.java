@@ -5,7 +5,7 @@ import org.example.fourchak.domain.coupon.dto.CouponCreateRequestDto;
 import org.example.fourchak.domain.coupon.dto.CouponResponseDto;
 import org.example.fourchak.domain.coupon.dto.CouponUpdateRequestDto;
 import org.example.fourchak.domain.coupon.service.CouponService;
-import org.example.fourchak.user.enums.UserRole;
+import org.example.fourchak.domain.user.enums.UserRole;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;

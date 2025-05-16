@@ -8,8 +8,8 @@ import org.example.fourchak.domain.coupon.dto.CouponResponseDto;
 import org.example.fourchak.domain.coupon.dto.CouponUpdateRequestDto;
 import org.example.fourchak.domain.coupon.entity.Coupon;
 import org.example.fourchak.domain.coupon.repository.CouponRepository;
-import org.example.fourchak.store.entity.Store;
-import org.example.fourchak.store.repository.StoreRepository;
+import org.example.fourchak.domain.store.entity.Store;
+import org.example.fourchak.domain.store.repository.StoreRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

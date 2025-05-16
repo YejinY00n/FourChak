@@ -10,12 +10,14 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.example.fourchak.domain.coupon.dto.CouponCreateRequestDto;
 import org.example.fourchak.domain.store.entity.Store;
 
 @Entity
 @Getter
+@NoArgsConstructor
 @Table(name = "coupon")
 public class Coupon {
 

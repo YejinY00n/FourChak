@@ -15,6 +15,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.fourchak.common.BaseEntity;
+import org.example.fourchak.store.entity.Store;
+import org.example.fourchak.user.entity.User;
 
 @Getter
 @Entity
@@ -40,4 +42,10 @@ public class Reservation extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
+    public Reservation(int peopleNumber, LocalDateTime reservationTime, Store store, User user) {
+        this.peopleNumber = peopleNumber;
+        this.reservationTime = reservationTime;
+        this.store = store;
+        this.user = user;
+    }
 }

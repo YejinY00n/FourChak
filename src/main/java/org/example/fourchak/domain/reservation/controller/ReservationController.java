@@ -2,10 +2,11 @@ package org.example.fourchak.domain.reservation.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.example.fourchak.common.ResponseMessage;
-import org.example.fourchak.reservation.dto.requset.ReservationRequestDto;
-import org.example.fourchak.reservation.dto.response.ReservationResponseDto;
-import org.example.fourchak.reservation.service.ReservationService;
+import org.example.fourchak.domain.reservation.dto.requset.ReservationRequestDto;
+import org.example.fourchak.domain.reservation.service.ReservationService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,12 +19,12 @@ public class ReservationController {
     private final ReservationService reservationService;
 
     @PostMapping("/store/{storeId}/reservation")
-    public ResponseMessage<ReservationResponseDto> saveReservation(
+    public ResponseMessage<?> saveReservation(
         @PathVariable Long storeId,
         @AuthenticationPrincipal CustomUserDetail customUserDetail,
         @RequestBody ReservationRequestDto reservationRequestDto) {
 
-        return ResponseMessage.<ReservationResponseDto>builder()
+        return ResponseMessage.builder()
             .statusCode(201)
             .message("예약되었습니다.")
             .data(reservationService.saveReservation(customUserDetail, reservationRequestDto,
@@ -31,4 +32,37 @@ public class ReservationController {
             .build();
     }
 
+    @GetMapping("/stores/{storeId}/reservation")
+    public ResponseMessage<?> findByStoreId(
+        @PathVariable Long storeId
+    ) {
+        return ResponseMessage.builder()
+            .statusCode(200)
+            .message("조회 성공")
+            .data(reservationService.findByStoreId(storeId))
+            .build();
+    }
+
+    @GetMapping("/users/{userId}/reservation")
+    public ResponseMessage<?> findByUserId(
+        @PathVariable Long userId,
+        @AuthenticationPrincipal CustomUserDetail customUserDetail
+    ) {
+        return ResponseMessage.builder()
+            .statusCode(200)
+            .message("조회 성공")
+            .data(reservationService.findByUserID(userId, customUserDetail))
+            .build();
+    }
+
+    @DeleteMapping("/reservation/{reservationId}")
+    public ResponseMessage<?> deleteReservation(
+        @PathVariable Long reservationId
+    ) {
+        reservationService.deleteReserve(reservationId);
+        return ResponseMessage.builder()
+            .statusCode(200)
+            .message("예약이 취소되었습니다.")
+            .build();
+    }
 }

@@ -32,7 +32,7 @@ public class ReservationService {
         Store store = storeRepository.findById(storeId)
             .orElseThrow(() -> new CustomRuntimeException(ExceptionCode.CANT_FIND_DATA));
 
-        int reservationPeopleCount = countReservationPeople(store.getId(),
+        int reservationPeopleCount = countReservationPeopleAtTime(store.getId(),
             dto.getReservationTime());
 
         if (store.getSeatCount() - reservationPeopleCount < dto.getPeopleNumber()) {
@@ -44,8 +44,8 @@ public class ReservationService {
                 ExceptionCode.CANT_FIND_DATA));
 
         Reservation reservation = new Reservation(
-            reservationRequestDto.getPeopleNumber(),
-            reservationRequestDto.getReservationTime(),
+            dto.getPeopleNumber(),
+            dto.getReservationTime(),
             store,
             user
         );
@@ -81,7 +81,7 @@ public class ReservationService {
         reservationRepository.deleteByReservationTimeBefore(LocalDateTime.now());
     }
 
-    public int countReservationPeople(Long storeId, LocalDateTime reservationTime) {
+    public int countReservationPeopleAtTime(Long storeId, LocalDateTime reservationTime) {
 
         List<Reservation> reservationList = reservationRepository.findByReservationTimeAndStoreId(
             reservationTime, storeId);

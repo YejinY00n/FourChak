@@ -10,6 +10,9 @@ import org.example.fourchak.domain.reservation.entity.Reservation;
 @AllArgsConstructor
 public class ReservationResponseDto {
 
+    private Long reservationId;
+    private Long userId;
+    private Long storeId;
     private String userName;
     private String storeName;
     private int peopleNumber;
@@ -18,6 +21,9 @@ public class ReservationResponseDto {
 
     public static ReservationResponseDto from(Reservation reservation) {
         return new ReservationResponseDto(
+            reservation.getId(),
+            reservation.getUser().getId(),
+            reservation.getStore().getId(),
             reservation.getUser().getUsername(),
             reservation.getStore().getStoreName(),
             reservation.getPeopleNumber(),

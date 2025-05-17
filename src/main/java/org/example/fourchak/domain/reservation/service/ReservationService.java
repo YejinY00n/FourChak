@@ -27,14 +27,21 @@ public class ReservationService {
 
     @Transactional
     public ReservationResponseDto saveReservation(CustomUserDetail customUserDetail,
-        ReservationRequestDto reservationRequestDto, Long storeId) {
+        ReservationRequestDto dto, Long storeId) {
+
+        Store store = storeRepository.findById(storeId)
+            .orElseThrow(() -> new CustomRuntimeException(ExceptionCode.CANT_FIND_DATA));
+
+        int reservationPeopleCount = countReservationPeople(store.getId(),
+            dto.getReservationTime());
+
+        if (store.getSeatCount() - reservationPeopleCount < dto.getPeopleNumber()) {
+            throw new CustomRuntimeException(ExceptionCode.NO_SEAT_AVAILABLE);
+        }
 
         User user = userRepository.findById(customUserDetail.getId())
             .orElseThrow(() -> new CustomRuntimeException(
                 ExceptionCode.CANT_FIND_DATA));
-
-        Store store = storeRepository.findById(storeId)
-            .orElseThrow(() -> new CustomRuntimeException(ExceptionCode.CANT_FIND_DATA));
 
         Reservation reservation = new Reservation(
             reservationRequestDto.getPeopleNumber(),
@@ -73,4 +80,14 @@ public class ReservationService {
     public void deleteExpired() {
         reservationRepository.deleteByReservationTimeBefore(LocalDateTime.now());
     }
+
+    public int countReservationPeople(Long storeId, LocalDateTime reservationTime) {
+
+        List<Reservation> reservationList = reservationRepository.findByReservationTimeAndStoreId(
+            reservationTime, storeId);
+        return reservationList.stream().mapToInt(Reservation::getPeopleNumber)
+            .sum();
+
+    }
+
 }

@@ -28,14 +28,14 @@ public class CouponService {
             throw new IllegalArgumentException("본인 소유의 가게가 아닙니다.");
         }
 
-        Coupon coupon = new Coupon(requestDto);
+        Coupon coupon = Coupon.from(requestDto);
         Store store = storeRepository.findById(storeId)
             .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 가게입니다."));
         coupon.setStore(store);
 
         // 쿠폰 레포지토리에 저장
         couponRepository.save(coupon);
-        return new CouponResponseDto(coupon);
+        return CouponResponseDto.from(coupon);
     }
 
     // 일반 사용자 조회
@@ -44,7 +44,7 @@ public class CouponService {
             () -> new IllegalArgumentException("존재하지 않는 가게입니다."));
         List<Coupon> couponList = couponRepository.findAllByStore(store);
         return couponList.stream()
-            .map(CouponResponseDto::new).toList();
+            .map(CouponResponseDto::from).toList();
     }
 
     // 가게 사장 조회
@@ -53,7 +53,7 @@ public class CouponService {
             () -> new IllegalArgumentException("존재하지 않는 가게입니다."));
         List<Coupon> couponList = couponRepository.findAllByStore(store);
         return couponList.stream()
-            .map(CouponAdminResponseDto::new).toList();
+            .map(CouponAdminResponseDto::from).toList();
     }
 
     // 쿠폰 업데이트

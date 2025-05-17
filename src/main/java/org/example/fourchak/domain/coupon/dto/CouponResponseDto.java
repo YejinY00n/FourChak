@@ -11,8 +11,7 @@ public class CouponResponseDto {
     private Long couponId;
     private int discount;
 
-    public CouponResponseDto(Coupon coupon) {
-        this.couponId = coupon.getId();
-        this.discount = coupon.getDiscount();
+    public static CouponResponseDto from(Coupon coupon) {
+        return new CouponResponseDto(coupon.getId(), coupon.getDiscount());
     }
 }

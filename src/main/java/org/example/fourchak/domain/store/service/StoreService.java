@@ -29,14 +29,14 @@ public class StoreService {
             requestDto.getSeatCount(), user);
         Store savedstore = storeRepository.save(store);
 
-        return new StoreResponseDto.from(savedstore);
+        return StoreResponseDto.from(savedstore);
     }
 
     // 가게 조회
     @Transactional
     public StoreResponseDto findStoreById(Long id) {
         Store store = storeRepository.findStoreByIdOrElseThrow(id);
-        return new StoreResponseDto.from(store);
+        return StoreResponseDto.from(store);
     }
 
     // 가게 정보수정
@@ -49,7 +49,7 @@ public class StoreService {
         }
         store.updateStore(requestDto.getStoreName(), requestDto.getNumber(),
             requestDto.getSeatCount());
-        return new StoreResponseDto.from(store);
+        return StoreResponseDto.from(store);
     }
 
     // 가게 폐업

@@ -2,6 +2,7 @@ package org.example.fourchak.domain.store.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.example.fourchak.common.ResponseMessage;
 import org.example.fourchak.domain.store.dto.request.StoreRequestDto;
 import org.example.fourchak.domain.store.dto.response.StoreResponseDto;
 import org.example.fourchak.domain.store.service.StoreService;
@@ -24,32 +25,60 @@ public class StoreController {
 
     // 가게 등록
     @PostMapping
-    public ResponseEntity<StoreResponseDto> saveStore(
+    public ResponseEntity<ResponseMessage<StoreResponseDto>> saveStore(
         @Valid @RequestBody StoreRequestDto requestDto) {
         StoreResponseDto responseDto = storeService.saveStore(requestDto, userId);
-        return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
+
+        ResponseMessage<StoreResponseDto> responseMessage = ResponseMessage.<StoreResponseDto>builder()
+            .statusCode(HttpStatus.CREATED.value())
+            .message("가게가 등록되었습니다.")
+            .data(responseDto)
+            .build();
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseMessage);
     }
 
     // 가게 단건조회
     @PostMapping("/{storeId}")
-    public ResponseEntity<StoreResponseDto> findStoreById(@PathVariable Long storeId) {
+    public ResponseEntity<ResponseMessage<StoreResponseDto>> findStoreById(
+        @PathVariable Long storeId) {
         StoreResponseDto responseDto = storeService.findStoreById(storeId);
-        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+
+        ResponseMessage<StoreResponseDto> responseMessage = ResponseMessage.<StoreResponseDto>builder()
+            .statusCode(HttpStatus.OK.value())
+            .message("가게 조회가 완료되었습니다.")
+            .data(responseDto)
+            .build();
+
+        return ResponseEntity.status(HttpStatus.OK).body(responseMessage);
     }
 
     // 가게 정보수정
     @PatchMapping("/{storeId}")
-    public ResponseEntity<StoreResponseDto> updateStore(@PathVariable Long storeId,
+    public ResponseEntity<ResponseMessage<StoreResponseDto>> updateStore(@PathVariable Long storeId,
         @RequestBody StoreRequestDto requestDto) {
         StoreResponseDto responseDto = storeService.updateStore(storeId, requestDto);
-        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+
+        ResponseMessage<StoreResponseDto> responseMessage = ResponseMessage.<StoreResponseDto>builder()
+            .statusCode(HttpStatus.OK.value())
+            .message("가게 정보가 수정되었습니다.")
+            .data(responseDto)
+            .build();
+
+        return ResponseEntity.status(HttpStatus.OK).body(responseMessage);
     }
 
     // 가게 폐업하기
     @DeleteMapping("/{storeId}")
-    public ResponseEntity<Void> deleteStore(@PathVariable Long storeId) {
+    public ResponseEntity<ResponseMessage<Void>> deleteStore(@PathVariable Long storeId) {
         storeService.deleteStore(storeId);
-        return new ResponseEntity<>(HttpStatus.OK);
+
+        ResponseMessage<Void> responseMessage = ResponseMessage.<Void>builder()
+            .statusCode(HttpStatus.OK.value())
+            .message("가게 정보가 수정되었습니다.")
+            .build();
+
+        return ResponseEntity.status(HttpStatus.OK).body(responseMessage);
     }
 
 }

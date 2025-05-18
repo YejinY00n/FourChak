@@ -10,18 +10,20 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.example.fourchak.common.BaseEntity;
 import org.example.fourchak.common.SoftDelete;
 import org.example.fourchak.user.enums.UserRole;
+import org.hibernate.annotations.Where;
 
 @Getter
 @Setter
 @Entity
 @NoArgsConstructor
 @Table(name = "users")
+@Where(clause = "is_deleted = false")
 public class User extends SoftDelete {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String email;
@@ -42,7 +44,4 @@ public class User extends SoftDelete {
         this.password = password;
         this.userRole = UserRole.of(userRole);
     }
-
-
-    // sting userRole 로 받아와서 this.userRole = UserRole.valueOf(userRole)
 }

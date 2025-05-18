@@ -1,13 +1,13 @@
-package org.example.fourchak.auth.controller;
+package org.example.fourchak.domain.auth.controller;
 
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.example.fourchak.auth.dto.request.SigninRequest;
-import org.example.fourchak.auth.dto.request.SignupRequest;
-import org.example.fourchak.auth.dto.response.SigninResponse;
-import org.example.fourchak.auth.dto.response.SignupResponse;
-import org.example.fourchak.auth.service.AuthService;
+import org.example.fourchak.domain.auth.dto.request.SigninRequest;
+import org.example.fourchak.domain.auth.dto.request.SignupRequest;
+import org.example.fourchak.domain.auth.dto.response.SigninResponse;
+import org.example.fourchak.domain.auth.dto.response.SignupResponse;
+import org.example.fourchak.domain.auth.service.AuthService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

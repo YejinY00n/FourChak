@@ -1,15 +1,15 @@
-package org.example.fourchak.auth.service;
+package org.example.fourchak.domain.auth.service;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.example.fourchak.auth.dto.request.SigninRequest;
-import org.example.fourchak.auth.dto.request.SignupRequest;
-import org.example.fourchak.auth.dto.response.SigninResponse;
-import org.example.fourchak.auth.dto.response.SignupResponse;
 import org.example.fourchak.common.error.CustomRuntimeException;
 import org.example.fourchak.common.error.ExceptionCode;
 import org.example.fourchak.config.jwt.JwtUtil;
 import org.example.fourchak.config.security.CustomPasswordEncoder;
+import org.example.fourchak.domain.auth.dto.request.SigninRequest;
+import org.example.fourchak.domain.auth.dto.request.SignupRequest;
+import org.example.fourchak.domain.auth.dto.response.SigninResponse;
+import org.example.fourchak.domain.auth.dto.response.SignupResponse;
 import org.example.fourchak.domain.user.entity.User;
 import org.example.fourchak.domain.user.repository.UserRepository;
 import org.springframework.stereotype.Service;

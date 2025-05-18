@@ -1,4 +1,4 @@
-package org.example.fourchak.auth.dto.response;
+package org.example.fourchak.domain.auth.dto.response;
 
 
 import java.time.LocalDateTime;

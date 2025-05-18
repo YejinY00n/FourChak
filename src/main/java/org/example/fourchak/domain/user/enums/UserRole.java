@@ -6,7 +6,7 @@ import org.example.fourchak.common.error.CustomRuntimeException;
 import org.example.fourchak.common.error.ExceptionCode;
 
 public enum UserRole {
-    USER, ADMIN;
+    USER, OWNER;
 
     public static UserRole of(String role) {
         return Arrays.stream(UserRole.values())

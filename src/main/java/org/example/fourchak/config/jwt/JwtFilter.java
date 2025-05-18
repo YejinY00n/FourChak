@@ -63,7 +63,7 @@ public class JwtFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
             if (url.startsWith("/admin")) {
-                // 관리자 권한이 없는 경우 403을 반환합니다.
+                // 사장이 아닐 경우
                 if (!UserRole.ADMIN.equals(userRole)) {
                     throw new CustomRuntimeException(ExceptionCode.NO_ADMIN_AUTHORITY);
                 }

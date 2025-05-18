@@ -27,7 +27,7 @@ public class AuthController {
     public ResponseEntity<SignupResponse> signup(
         @Valid @RequestBody SignupRequest request
     ) {
-        return new ResponseEntity<>(authService.signup(request), HttpStatus.OK);
+        return new ResponseEntity<>(authService.signup(request), HttpStatus.CREATED);
     }
 
     // 로그인 - 토큰발행

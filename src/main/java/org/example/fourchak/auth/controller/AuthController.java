@@ -5,8 +5,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.fourchak.auth.dto.request.SigninRequest;
 import org.example.fourchak.auth.dto.request.SignupRequest;
-import org.example.fourchak.auth.dto.response.SignupResponse;
 import org.example.fourchak.auth.dto.response.SigninResponse;
+import org.example.fourchak.auth.dto.response.SignupResponse;
 import org.example.fourchak.auth.service.AuthService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +35,6 @@ public class AuthController {
     public ResponseEntity<SigninResponse> signin(
         @Valid @RequestBody SigninRequest request
     ) {
-        return new ResponseEntity<>(authService.signin(request),HttpStatus.OK);
+        return new ResponseEntity<>(authService.signin(request), HttpStatus.OK);
     }
 }

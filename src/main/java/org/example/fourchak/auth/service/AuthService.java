@@ -1,9 +1,7 @@
 package org.example.fourchak.auth.service;
 
 import jakarta.validation.Valid;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import org.aspectj.weaver.NewConstructorTypeMunger;
 import org.example.fourchak.auth.dto.request.SigninRequest;
 import org.example.fourchak.auth.dto.request.SignupRequest;
 import org.example.fourchak.auth.dto.response.SigninResponse;
@@ -12,8 +10,8 @@ import org.example.fourchak.common.error.CustomRuntimeException;
 import org.example.fourchak.common.error.ExceptionCode;
 import org.example.fourchak.config.jwt.JwtUtil;
 import org.example.fourchak.config.security.CustomPasswordEncoder;
-import org.example.fourchak.user.entity.User;
-import org.example.fourchak.user.repository.UserRepository;
+import org.example.fourchak.domain.user.entity.User;
+import org.example.fourchak.domain.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,7 +28,7 @@ public class AuthService {
     public SignupResponse signup(SignupRequest request) {
 
         // email 중복 방지
-        if(userRepository.existsByEmail(request.getEmail())) {
+        if (userRepository.existsByEmail(request.getEmail())) {
             throw new CustomRuntimeException(ExceptionCode.EMAIL_ALREADY_EXISTS);
         }
 
@@ -64,10 +62,10 @@ public class AuthService {
 
         // email 확인, 해당 유저정보 가져오기
         User userInfo = userRepository.findByEmail(request.getEmail())
-            .orElseThrow(()-> new CustomRuntimeException(ExceptionCode.NOT_FOUND_EMAIL));
+            .orElseThrow(() -> new CustomRuntimeException(ExceptionCode.NOT_FOUND_EMAIL));
 
         // 비밀번호 확인
-        if(!passwordEncoder.matches(request.getPassword(), userInfo.getPassword())) {
+        if (!passwordEncoder.matches(request.getPassword(), userInfo.getPassword())) {
             throw new CustomRuntimeException(ExceptionCode.MISS_MATCH_PASSWORD);
         }
 

@@ -14,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.fourchak.common.error.CustomRuntimeException;
 import org.example.fourchak.common.error.ExceptionCode;
 import org.example.fourchak.config.security.CustomUserDetailsService;
-import org.example.fourchak.user.enums.UserRole;
+import org.example.fourchak.domain.user.enums.UserRole;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -35,26 +35,26 @@ public class JwtFilter extends OncePerRequestFilter {
 
         String url = httpServletRequest.getRequestURI();
 
-        if(url.startsWith("/auth")) {
+        if (url.startsWith("/auth")) {
             filterChain.doFilter(request, response);
             return;
         }
 
         String bearerJwt = httpServletRequest.getHeader("Authorization");
 
-        if(bearerJwt == null) {
+        if (bearerJwt == null) {
             throw new CustomRuntimeException(ExceptionCode.JWT_TOKEN_REQUIRED);
         }
 
         String jwt = jwtUtil.substringToken(bearerJwt);
 
-        try{
+        try {
             Claims claims = jwtUtil.extractClaims(jwt);
-            if(claims == null) {
+            if (claims == null) {
                 throw new CustomRuntimeException(ExceptionCode.INVALID_JWT_TOKEN);
             }
 
-            String email = claims.get("email",String.class);
+            String email = claims.get("email", String.class);
             UserRole userRole = UserRole.valueOf(claims.get("userRole", String.class));
 
             UserDetails userDetails = userDetailsService.loadUserByUsername(email);
@@ -71,7 +71,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 return;
             }
 
-            filterChain.doFilter(request,response);
+            filterChain.doFilter(request, response);
         } catch (SecurityException | MalformedJwtException e) {
             log.error("Invalid JWT signature, 유효하지 않는 JWT 서명 입니다.", e);
             throw new CustomRuntimeException(ExceptionCode.INVALID_JWT_SIGNATURE);

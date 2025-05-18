@@ -12,7 +12,7 @@ import java.util.Date;
 import lombok.extern.slf4j.Slf4j;
 import org.example.fourchak.common.error.CustomRuntimeException;
 import org.example.fourchak.common.error.ExceptionCode;
-import org.example.fourchak.user.enums.UserRole;
+import org.example.fourchak.domain.user.enums.UserRole;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;

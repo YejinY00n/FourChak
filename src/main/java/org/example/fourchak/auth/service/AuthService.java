@@ -45,19 +45,17 @@ public class AuthService {
             encodedPassword,
             request.getUserRole()
         );
+
         User savedUser = userRepository.save(user);
 
-        // 응답
-        SignupResponse response = new SignupResponse(
+        return new SignupResponse(
             savedUser.getId(),
             savedUser.getEmail(),
             savedUser.getUsername(),
             savedUser.getPhone(),
-            savedUser.getPassword(),
             savedUser.getUserRole().toString(),
             savedUser.getCreatedAt()
         );
-        return response;
     }
 
     // 로그인
@@ -73,6 +71,7 @@ public class AuthService {
             throw new CustomRuntimeException(ExceptionCode.MISS_MATCH_PASSWORD);
         }
 
+        // 토큰 생성
         String bearerToken = jwtUtil.createToken(userInfo.getId(), userInfo.getEmail(),
             userInfo.getUserRole());
 

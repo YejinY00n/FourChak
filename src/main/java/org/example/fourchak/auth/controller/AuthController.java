@@ -31,6 +31,7 @@ public class AuthController {
     }
 
     // 로그인 - 토큰발행
+    @PostMapping("/signin")
     public ResponseEntity<SigninResponse> signin(
         @Valid @RequestBody SigninRequest request
     ) {

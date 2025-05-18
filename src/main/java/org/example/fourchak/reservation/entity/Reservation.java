@@ -15,6 +15,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.fourchak.common.BaseEntity;
+import org.example.fourchak.store.entity.Store;
+import org.example.fourchak.user.entity.User;
 
 @Getter
 @Entity

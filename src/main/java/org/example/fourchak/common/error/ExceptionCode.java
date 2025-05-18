@@ -13,6 +13,8 @@ public enum ExceptionCode implements ErrorCode {
     JWT_TOKEN_REQUIRED(HttpStatus.BAD_REQUEST, "JWT 토큰이 필요합니다."),
     INVALID_JWT_TOKEN(HttpStatus.BAD_REQUEST, "잘못된 JWT 토큰입니다."),
     UNSUPPORTED_JWT_TOKEN(HttpStatus.BAD_REQUEST, "지원되지 않는 JWT 토큰입니다."),
+    INVALID_USER_ROLE(HttpStatus.BAD_REQUEST, "잘못된 역활입니다. USER과 ADMIN 둘 중 하나를 선택해 주세요"),
+    ALREADY_DELETED_USER(HttpStatus.BAD_REQUEST, "이미 탈퇴한 회원입니다."),
 
     // 401 Unauthorized = 인증이 안될 때
     INVALID_JWT_SIGNATURE(HttpStatus.UNAUTHORIZED, "유효하지 않는 JWT 서명입니다."),

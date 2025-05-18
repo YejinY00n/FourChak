@@ -9,14 +9,17 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.example.fourchak.common.BaseEntity;
+import org.example.fourchak.common.SoftDelete;
 import org.example.fourchak.user.enums.UserRole;
 
 @Getter
+@Setter
 @Entity
 @NoArgsConstructor
 @Table(name = "users")
-public class User extends BaseEntity {
+public class User extends SoftDelete {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -37,8 +40,9 @@ public class User extends BaseEntity {
         this.username = username;
         this.phone = phone;
         this.password = password;
-        this.userRole = UserRole.valueOf(userRole);
+        this.userRole = UserRole.of(userRole);
     }
+
 
     // sting userRole 로 받아와서 this.userRole = UserRole.valueOf(userRole)
 }

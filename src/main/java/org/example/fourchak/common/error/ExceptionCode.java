@@ -8,7 +8,12 @@ import org.springframework.http.HttpStatus;
 @RequiredArgsConstructor
 public enum ExceptionCode implements ErrorCode {
 
-    CANT_FIND_DATA(HttpStatus.NOT_FOUND, "해당 데이터를 찾을 수 없습니다.");
+    CANT_FIND_DATA(HttpStatus.NOT_FOUND, "해당 데이터를 찾을 수 없습니다."),
+    NOT_FOUND_TOKEN(HttpStatus.NOT_FOUND, "해당 토큰을 찾을 수 없습니다."),
+    NOT_FOUND_USERNAME(HttpStatus.NOT_FOUND, "해당 유저를 찾을 수 없습니다.")
+
+    ;
+
 
     private final HttpStatus httpStatus;
     private final String message;

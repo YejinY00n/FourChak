@@ -1,6 +1,8 @@
 package org.example.fourchak.user.entity;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -8,6 +10,7 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.fourchak.common.BaseEntity;
+import org.example.fourchak.user.enums.UserRole;
 
 @Getter
 @Entity
@@ -26,5 +29,16 @@ public class User extends BaseEntity {
 
     private String password;
 
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private UserRole userRole;
+
+    public User(String email, String username, String phone, String password, String userRole) {
+        this.email = email;
+        this.username = username;
+        this.phone = phone;
+        this.password = password;
+        this.userRole = UserRole.valueOf(userRole);
+    }
+
+    // sting userRole 로 받아와서 this.userRole = UserRole.valueOf(userRole)
 }

@@ -64,7 +64,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
             if (url.startsWith("/admin")) {
                 // 사장이 아닐 경우
-                if (!UserRole.ADMIN.equals(userRole)) {
+                if (!UserRole.OWNER.equals(userRole)) {
                     throw new CustomRuntimeException(ExceptionCode.NO_ADMIN_AUTHORITY);
                 }
                 filterChain.doFilter(request, response);

@@ -5,13 +5,13 @@ import org.example.fourchak.common.UpdateUtils;
 import org.example.fourchak.common.error.CustomRuntimeException;
 import org.example.fourchak.common.error.ExceptionCode;
 import org.example.fourchak.config.jwt.JwtUtil;
+import org.example.fourchak.config.security.CustomPasswordEncoder;
 import org.example.fourchak.domain.user.dto.request.NewPasswordRequest;
 import org.example.fourchak.domain.user.dto.request.UserPasswordRequest;
 import org.example.fourchak.domain.user.dto.request.UsernameAndPhoneRequest;
 import org.example.fourchak.domain.user.dto.response.UserInfoResponse;
 import org.example.fourchak.domain.user.entity.User;
 import org.example.fourchak.domain.user.repository.UserRepository;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final CustomPasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
     public UserInfoResponse getUserInfoByToken(String token, UserPasswordRequest passwordRequest) {
@@ -57,7 +57,14 @@ public class UserService {
 
         User userInfo = findInfoAndCheckPassword(token, passwordRequest);
 
-        userInfo.setPassword(newPasswordRequest.getNewPassword());
+        String encodedPassword = passwordEncoder.encode(newPasswordRequest.getNewPassword());
+
+        // 동일한 비밀번호 시
+        if (passwordEncoder.matches(encodedPassword, passwordRequest.getPassword())) {
+            throw new CustomRuntimeException(ExceptionCode.DUPLICATE_PASSWORD_CHANGE);
+        }
+
+        userInfo.setPassword(encodedPassword);
     }
 
     @Transactional
@@ -84,7 +91,7 @@ public class UserService {
             .orElseThrow(() -> new CustomRuntimeException(ExceptionCode.NOT_FOUND_EMAIL));
 
         // 비밀번호 확인
-        if (!passwordEncoder.matches(passwordRequest.getPassword(), userInfo.getPassword())) {
+        if (!passwordEncoder.matches(userInfo.getPassword(), passwordRequest.getPassword())) {
             throw new CustomRuntimeException(ExceptionCode.MISS_MATCH_PASSWORD);
         }
 

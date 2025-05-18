@@ -11,6 +11,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.fourchak.common.error.CustomRuntimeException;
+import org.example.fourchak.common.error.ExceptionCode;
 import org.example.fourchak.config.security.CustomUserDetailsService;
 import org.example.fourchak.user.enums.UserRole;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -41,8 +43,7 @@ public class JwtFilter extends OncePerRequestFilter {
         String bearerJwt = httpServletRequest.getHeader("Authorization");
 
         if(bearerJwt == null) {
-            httpServletResponse.sendError(HttpServletResponse.SC_BAD_REQUEST, "JWT 토큰이 필요합니다.");
-            return;
+            throw new CustomRuntimeException(ExceptionCode.JWT_TOKEN_REQUIRED);
         }
 
         String jwt = jwtUtil.substringToken(bearerJwt);
@@ -50,8 +51,7 @@ public class JwtFilter extends OncePerRequestFilter {
         try{
             Claims claims = jwtUtil.extractClaims(jwt);
             if(claims == null) {
-                httpServletResponse.sendError(HttpServletResponse.SC_BAD_REQUEST, "잘못된 JWT 토큰입니다.");
-                return;
+                throw new CustomRuntimeException(ExceptionCode.INVALID_JWT_TOKEN);
             }
 
             String email = claims.get("email",String.class);
@@ -65,8 +65,7 @@ public class JwtFilter extends OncePerRequestFilter {
             if (url.startsWith("/admin")) {
                 // 관리자 권한이 없는 경우 403을 반환합니다.
                 if (!UserRole.ADMIN.equals(userRole)) {
-                    httpServletResponse.sendError(HttpServletResponse.SC_FORBIDDEN, "관리자 권한이 없습니다.");
-                    return;
+                    throw new CustomRuntimeException(ExceptionCode.NO_ADMIN_AUTHORITY);
                 }
                 filterChain.doFilter(request, response);
                 return;
@@ -75,16 +74,16 @@ public class JwtFilter extends OncePerRequestFilter {
             filterChain.doFilter(request,response);
         } catch (SecurityException | MalformedJwtException e) {
             log.error("Invalid JWT signature, 유효하지 않는 JWT 서명 입니다.", e);
-            httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "유효하지 않는 JWT 서명입니다.");
+            throw new CustomRuntimeException(ExceptionCode.INVALID_JWT_SIGNATURE);
         } catch (ExpiredJwtException e) {
             log.error("Expired JWT token, 만료된 JWT token 입니다.", e);
-            httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "만료된 JWT 토큰입니다.");
+            throw new CustomRuntimeException(ExceptionCode.EXPIRED_JWT_TOKEN);
         } catch (UnsupportedJwtException e) {
             log.error("Unsupported JWT token, 지원되지 않는 JWT 토큰 입니다.", e);
-            httpServletResponse.sendError(HttpServletResponse.SC_BAD_REQUEST, "지원되지 않는 JWT 토큰입니다.");
+            throw new CustomRuntimeException(ExceptionCode.UNSUPPORTED_JWT_TOKEN);
         } catch (Exception e) {
             log.error("Internal server error", e);
-            httpServletResponse.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            throw new CustomRuntimeException(ExceptionCode.INTERNAL_SERVER_ERROR);
         }
     }
 }

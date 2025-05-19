@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.example.fourchak.common.UpdateUtils;
 import org.example.fourchak.common.error.CustomRuntimeException;
 import org.example.fourchak.common.error.ExceptionCode;
-import org.example.fourchak.config.jwt.JwtUtil;
 import org.example.fourchak.domain.user.dto.request.NewPasswordRequest;
 import org.example.fourchak.domain.user.dto.request.UserPasswordRequest;
 import org.example.fourchak.domain.user.dto.request.UsernameAndPhoneRequest;
@@ -21,7 +20,6 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtUtil jwtUtil;
 
     public UserInfoResponse getUserInfoByToken(String email, UserPasswordRequest passwordRequest) {
 

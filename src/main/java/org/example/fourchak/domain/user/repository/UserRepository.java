@@ -2,6 +2,7 @@ package org.example.fourchak.domain.user.repository;
 
 import java.util.Optional;
 import org.example.fourchak.domain.user.entity.User;
+import org.example.fourchak.domain.user.enums.UserRole;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
@@ -20,4 +21,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
         return user;
     }
 
+    Optional<User> findByEmail(String email);
+
+    Optional<User> findByUsername(String username);
+
+    boolean existsByEmail(String email);
 }

@@ -1,19 +1,26 @@
 package org.example.fourchak.domain.user.entity;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.example.fourchak.common.BaseEntity;
+import lombok.Setter;
+import org.example.fourchak.common.SoftDelete;
+import org.example.fourchak.domain.user.enums.UserRole;
+import org.hibernate.annotations.Where;
 
 @Getter
+@Setter
 @Entity
 @NoArgsConstructor
 @Table(name = "users")
-public class User extends BaseEntity {
+@Where(clause = "is_deleted = false")
+public class User extends SoftDelete {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,11 +28,21 @@ public class User extends BaseEntity {
 
     private String email;
 
+
     private String username;
 
     private String phone;
 
     private String password;
 
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private UserRole userRole;
+
+    public User(String email, String username, String phone, String password, String userRole) {
+        this.email = email;
+        this.username = username;
+        this.phone = phone;
+        this.password = password;
+        this.userRole = UserRole.of(userRole);
+    }
 }

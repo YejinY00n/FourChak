@@ -47,7 +47,7 @@ public class CouponController {
                 .build();
             return ResponseEntity.ok(responseMessage);
         }
-        if (role.equals(UserRole.ADMIN)) {
+        if (role.equals(UserRole.OWNER)) {
             ResponseMessage<List<CouponAdminResponseDto>> responseMessage =
                 ResponseMessage.<List<CouponAdminResponseDto>>builder()
                     .statusCode(HttpStatus.CREATED.value())

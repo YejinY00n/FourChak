@@ -37,8 +37,13 @@ public class Coupon {
     @Column(nullable = false)
     private int count;
 
-    public Coupon(CouponCreateRequestDto requestDto) {
-        this.discount = requestDto.getDiscount();
-        this.count = requestDto.getCount();
+
+    public Coupon(int discount, int count) {
+        this.discount = discount;
+        this.count = count;
+    }
+
+    public static Coupon from(CouponCreateRequestDto requestDto) {
+        return new Coupon(requestDto.getDiscount(), requestDto.getCount());
     }
 }

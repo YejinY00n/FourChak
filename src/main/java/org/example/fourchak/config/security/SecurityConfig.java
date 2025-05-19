@@ -36,8 +36,8 @@ public class SecurityConfig {
                 auth.requestMatchers("/auth/**").permitAll();
 
                 // "/stores/**/coupons/" get 요청 외 OWNER 권한 필요 - 명시성을 위한 구현
-                auth.requestMatchers(HttpMethod.GET, "/stores/**/coupons/**").authenticated();
-                auth.requestMatchers("/stores/**/coupons/**").hasRole("OWNER");
+                auth.requestMatchers(HttpMethod.GET, "**/coupons/**").authenticated();
+                auth.requestMatchers("**/coupons/**").hasRole("OWNER");
 
                 // "/stores" get 요청 외 OWNER 권한 필요
                 auth.requestMatchers(HttpMethod.GET, "/stores/**").authenticated();

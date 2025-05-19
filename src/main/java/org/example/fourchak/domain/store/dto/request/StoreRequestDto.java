@@ -11,8 +11,7 @@ public class StoreRequestDto {
 
     @NotBlank(message = "전화번호를 입력해주세요.")
     private final String number;
-
-    @NotBlank(message = "좌석 수를 입력해주세요.")
+    
     private final int seatCount;
 
     public StoreRequestDto(String storeName, String number, int seatCount) {

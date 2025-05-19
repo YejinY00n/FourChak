@@ -62,10 +62,10 @@ public class JwtFilter extends OncePerRequestFilter {
                 userDetails, null, userDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
-            if (url.startsWith("/admin")) {
+            if (url.startsWith("/OWNER")) {
                 // 사장이 아닐 경우
                 if (!UserRole.OWNER.equals(userRole)) {
-                    throw new CustomRuntimeException(ExceptionCode.NO_ADMIN_AUTHORITY);
+                    throw new CustomRuntimeException(ExceptionCode.NO_OWNER_AUTHORITY);
                 }
                 filterChain.doFilter(request, response);
                 return;

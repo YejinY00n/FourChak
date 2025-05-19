@@ -21,6 +21,4 @@ public class CustomUserDetailsService implements UserDetailsService {
             .map(CustomUserPrincipal::new)
             .orElseThrow(() -> new CustomRuntimeException(ExceptionCode.NOT_FOUND_USERNAME));
     }
-
-    ;
 }

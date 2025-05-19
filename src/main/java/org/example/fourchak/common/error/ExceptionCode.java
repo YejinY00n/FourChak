@@ -22,7 +22,7 @@ public enum ExceptionCode implements ErrorCode {
     MISS_MATCH_PASSWORD(HttpStatus.UNAUTHORIZED, "잘못된 비밀번호 입니다."),
 
     // 403 Forbidden = 권한이 없을 때
-    NO_ADMIN_AUTHORITY(HttpStatus.FORBIDDEN, "사장의 권한이 없습니다."),
+    NO_OWNER_AUTHORITY(HttpStatus.FORBIDDEN, "사장의 권한이 없습니다."),
 
     // 404 Not Found
     CANT_FIND_DATA(HttpStatus.NOT_FOUND, "해당 데이터를 찾을 수 없습니다."),

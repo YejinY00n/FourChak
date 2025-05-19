@@ -65,7 +65,7 @@ public class AuthService {
             .orElseThrow(() -> new CustomRuntimeException(ExceptionCode.NOT_FOUND_EMAIL));
 
         // 비밀번호 확인
-        if (!passwordEncoder.matches(userInfo.getPassword(), request.getPassword())) {
+        if (!passwordEncoder.matches(request.getPassword(), userInfo.getPassword())) {
             throw new CustomRuntimeException(ExceptionCode.MISS_MATCH_PASSWORD);
         }
 

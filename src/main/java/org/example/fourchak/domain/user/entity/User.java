@@ -1,5 +1,6 @@
 package org.example.fourchak.domain.user.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -26,9 +27,9 @@ public class User extends SoftDelete {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true)
     private String email;
-
-
+    
     private String username;
 
     private String phone;

@@ -5,6 +5,7 @@ import org.example.fourchak.config.jwt.JwtFilter;
 import org.example.fourchak.config.jwt.JwtUtil;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -30,7 +31,20 @@ public class SecurityConfig {
             .sessionManagement(sm
                 -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth
-                -> auth.requestMatchers("/auth/**").permitAll().anyRequest().authenticated())
+                -> {
+                // "/auth" 인증 없이 필터 통과
+                auth.requestMatchers("/auth/**").permitAll();
+
+                // "/stores/**/coupons/" get 요청 외 OWNER 권한 필요 - 명시성을 위한 구현
+                auth.requestMatchers(HttpMethod.GET, "/stores/**/coupons/**").authenticated();
+                auth.requestMatchers("/stores/**/coupons/**").hasRole("OWNER");
+
+                // "/stores" get 요청 외 OWNER 권한 필요
+                auth.requestMatchers(HttpMethod.GET, "/stores/**").authenticated();
+                auth.requestMatchers("/stores/**").hasRole("OWNER");
+
+                auth.anyRequest().authenticated();
+            })
             .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return httpSecurity.build();

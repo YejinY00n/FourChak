@@ -2,6 +2,7 @@ package org.example.fourchak.domain.user.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.example.fourchak.common.ResponseMessage;
 import org.example.fourchak.config.security.CustomUserPrincipal;
 import org.example.fourchak.domain.user.dto.request.NewPasswordRequest;
 import org.example.fourchak.domain.user.dto.request.UserPasswordRequest;
@@ -28,45 +29,46 @@ public class UserController {
 
     // 토큰으로 유저 정보 찾기
     @GetMapping
-    public ResponseEntity<UserInfoResponse> getMyInfo(
+    public ResponseEntity<ResponseMessage<UserInfoResponse>> getMyInfo(
         @AuthenticationPrincipal CustomUserPrincipal userPrincipal,
         @Valid @RequestBody UserPasswordRequest passwordRequest
     ) {
-        // userPrincipal.getUsername()에는 사용자 이름 대신 email을 요청함
-        return new ResponseEntity<>(
-            userService.getUserInfoByToken(userPrincipal.getUsername(), passwordRequest),
-            HttpStatus.OK);
+        return ResponseEntity.status(HttpStatus.OK).body(
+            ResponseMessage.success("프로필 조회를 하였습니다.",
+                userService.getUserInfoByToken(userPrincipal.getUsername(), passwordRequest))
+        );
     }
 
     // 유저이름, 전화번호 수정
     @PutMapping
-    public ResponseEntity<UserInfoResponse> putMyInfo(
+    public ResponseEntity<ResponseMessage<UserInfoResponse>> putMyInfo(
         @AuthenticationPrincipal CustomUserPrincipal userPrincipal,
         @Valid @RequestBody UsernameAndPhoneRequest request
     ) {
-        return new ResponseEntity<>(
-            userService.putUsernameAndPhone(userPrincipal.getUsername(), request),
-            HttpStatus.OK);
+        return ResponseEntity.status(HttpStatus.OK).body(
+            ResponseMessage.success("프로필 수정이 완료되었습니다.",
+                userService.putUsernameAndPhone(userPrincipal.getUsername(), request))
+        );
     }
 
     // 패스워드 변경
     @PatchMapping
-    public ResponseEntity<String> patchMyPassword(
+    public ResponseEntity<ResponseMessage<String>> patchMyPassword(
         @AuthenticationPrincipal CustomUserPrincipal userPrincipal,
         @Valid @RequestBody NewPasswordRequest newPasswordRequest
     ) {
         userService.patchUserPassword(userPrincipal.getUsername(),
             newPasswordRequest);
-        return new ResponseEntity<>("비밀번호 수정이 완료되었습니다.", HttpStatus.OK);
+        return ResponseEntity.ok(ResponseMessage.success("비밀번호 수정이 완료되었습니다."));
     }
 
     // 회원탈퇴
     @DeleteMapping
-    public ResponseEntity<String> deleteMyInfo(
+    public ResponseEntity<ResponseMessage<String>> deleteMyInfo(
         @AuthenticationPrincipal CustomUserPrincipal userPrincipal,
         @Valid @RequestBody UserPasswordRequest passwordRequest
     ) {
         userService.deleteUserInfo(userPrincipal.getUsername(), passwordRequest);
-        return new ResponseEntity<>("회원탈퇴를 완료 하였습니다.", HttpStatus.OK);
+        return ResponseEntity.ok(ResponseMessage.success("회원탈퇴를 완료 하였습니다."));
     }
 }

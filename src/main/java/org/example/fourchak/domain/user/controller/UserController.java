@@ -42,11 +42,10 @@ public class UserController {
     @PutMapping
     public ResponseEntity<UserInfoResponse> putMyInfo(
         @AuthenticationPrincipal CustomUserPrincipal userPrincipal,
-        @Valid @RequestBody UsernameAndPhoneRequest request,
-        @Valid @RequestBody UserPasswordRequest passwordRequest
+        @Valid @RequestBody UsernameAndPhoneRequest request
     ) {
         return new ResponseEntity<>(
-            userService.putUsernameAndPhone(userPrincipal.getUsername(), request, passwordRequest),
+            userService.putUsernameAndPhone(userPrincipal.getUsername(), request),
             HttpStatus.OK);
     }
 
@@ -54,10 +53,9 @@ public class UserController {
     @PatchMapping
     public ResponseEntity<String> patchMyPassword(
         @AuthenticationPrincipal CustomUserPrincipal userPrincipal,
-        @Valid @RequestBody UserPasswordRequest passwordRequest,
         @Valid @RequestBody NewPasswordRequest newPasswordRequest
     ) {
-        userService.patchUserPassword(userPrincipal.getUsername(), passwordRequest,
+        userService.patchUserPassword(userPrincipal.getUsername(),
             newPasswordRequest);
         return new ResponseEntity<>("비밀번호 수정이 완료되었습니다.", HttpStatus.OK);
     }

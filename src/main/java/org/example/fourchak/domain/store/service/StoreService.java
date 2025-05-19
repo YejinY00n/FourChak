@@ -41,8 +41,8 @@ public class StoreService {
 
     // 가게 정보수정
     @Transactional
-    public StoreResponseDto updateStore(Long id, StoreRequestDto requestDto) {
-        Store store = storeRepository.findStoreByIdOrElseThrow(id);
+    public StoreResponseDto updateStore(Long userId, Long storeId, StoreRequestDto requestDto) {
+        Store store = storeRepository.findStoreByIdOrElseThrow(storeId);
         User user = userRepository.findUserByOnwerIdOrElseThrow(userId);
         if (store.getUser() != user) {
             throw new IllegalArgumentException("해당 가게를 관리하는 사람이 아닙니다.");
@@ -54,7 +54,7 @@ public class StoreService {
 
     // 가게 폐업
     @Transactional
-    public void deleteStore(Long id) {
+    public void deleteStore(Long id, Long userId) {
         Store store = storeRepository.findStoreByIdOrElseThrow(id);
         User user = userRepository.findUserByOnwerIdOrElseThrow(userId);
 

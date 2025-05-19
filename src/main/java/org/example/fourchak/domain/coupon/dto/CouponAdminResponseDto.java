@@ -12,9 +12,8 @@ public class CouponAdminResponseDto {
     private int discount;
     private int count;
 
-    public CouponAdminResponseDto(Coupon coupon) {
-        this.couponId = coupon.getId();
-        this.discount = coupon.getDiscount();
-        this.count = coupon.getCount();
+    public static CouponAdminResponseDto from(Coupon coupon) {
+        return new CouponAdminResponseDto(
+            coupon.getId(), coupon.getDiscount(), coupon.getCount());
     }
 }

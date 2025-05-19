@@ -1,12 +1,18 @@
 package org.example.fourchak.domain.coupon.controller;
 
+import java.util.Collection;
 import lombok.RequiredArgsConstructor;
+import org.example.fourchak.common.ResponseMessage;
+import org.example.fourchak.config.security.CustomUserPrincipal;
 import org.example.fourchak.domain.coupon.dto.CouponCreateRequestDto;
 import org.example.fourchak.domain.coupon.dto.CouponResponseDto;
 import org.example.fourchak.domain.coupon.dto.CouponUpdateRequestDto;
 import org.example.fourchak.domain.coupon.service.CouponService;
 import org.example.fourchak.domain.user.enums.UserRole;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -19,38 +25,46 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class CouponController {
 
-    // TODO: @AuthUser 추가
     private final CouponService couponService;
 
     @PostMapping("/stores/{storeId}/coupons")
-    ResponseEntity<CouponResponseDto> createCoupon(
-        @PathVariable Long storeId, @RequestBody CouponCreateRequestDto requestDto) {
-        Long userId = 1L;   // TODO: JWT 들어오면 변경
-        return ResponseEntity.ok(couponService.createCoupon(userId, storeId, requestDto));
+    ResponseEntity<ResponseMessage<CouponResponseDto>> createCoupon(
+        @AuthenticationPrincipal CustomUserPrincipal userPrincipal, @PathVariable Long storeId,
+        @RequestBody CouponCreateRequestDto requestDto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+            ResponseMessage.success(
+                couponService.createCoupon(userPrincipal.getId(), storeId, requestDto)));
     }
 
     @GetMapping("/stores/{storeId}/coupons")
-    ResponseEntity<?> findCoupon(@PathVariable Long storeId) {
-        UserRole role = UserRole.USER;  // TODO: JWT 들어오면 변경
-        if (role.equals(UserRole.USER)) {
-            return ResponseEntity.ok(couponService.findCoupon(storeId));
+    ResponseEntity<ResponseMessage<?>> findCouponForUsers(
+        @AuthenticationPrincipal CustomUserPrincipal userPrincipal, @PathVariable Long storeId) {
+        Collection<? extends GrantedAuthority> authorities = userPrincipal.getAuthorities();
+        if (authorities.stream().anyMatch(
+            auth -> auth.getAuthority().equals("ROLE_" + UserRole.USER))) {
+            return ResponseEntity.ok(
+                ResponseMessage.success(couponService.findCoupon(storeId)));
         }
-        if (role.equals(UserRole.OWNER)) {
-            return ResponseEntity.ok(couponService.findCouponWithAuthor(storeId));
+        if (authorities.stream().anyMatch(
+            auth -> auth.getAuthority().equals("ROLE_" + UserRole.OWNER))) {
+            return ResponseEntity.ok(
+                ResponseMessage.success(couponService.findCouponWithAuthor(storeId)));
         }
+
         return ResponseEntity.badRequest().build();
     }
 
     @PatchMapping("/stores/{storeId}/coupons/{couponId}")
-    ResponseEntity<Void> updateCoupon(
+    ResponseEntity<ResponseMessage<Void>> updateCoupon(
         @PathVariable Long couponId, @RequestBody CouponUpdateRequestDto requestDto) {
         couponService.updateCoupon(couponId, requestDto);
-        return ResponseEntity.ok().build();
+
+        return ResponseEntity.ok(ResponseMessage.success());
     }
 
     @DeleteMapping("/stores/{storeId}/coupons/{couponId}")
-    ResponseEntity<Void> deleteCoupon(@PathVariable Long couponId) {
+    ResponseEntity<ResponseMessage<Void>> deleteCoupon(@PathVariable Long couponId) {
         couponService.deleteCoupon(couponId);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(ResponseMessage.success());
     }
 }

@@ -28,6 +28,7 @@ public class SearchService {
         // 검색어 저장 또는 카운트 증가
         saveSearchKeyword(keyword);
 
+        // DB에서 직접 검색
         Page<Store> storePage = storeRepository.findByStoreNameContaining(keyword, pageable);
 
         return storePage.map(StoreResponseDto::from);

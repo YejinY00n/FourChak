@@ -14,10 +14,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.fourchak.common.error.CustomRuntimeException;
 import org.example.fourchak.common.error.ExceptionCode;
 import org.example.fourchak.config.security.CustomUserDetailsService;
+import org.example.fourchak.config.security.CustomUserPrincipal;
 import org.example.fourchak.domain.user.enums.UserRole;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 @Slf4j
@@ -57,7 +57,7 @@ public class JwtFilter extends OncePerRequestFilter {
             String email = claims.get("email", String.class);
             UserRole userRole = UserRole.valueOf(claims.get("userRole", String.class));
 
-            UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+            CustomUserPrincipal userDetails = userDetailsService.loadUserByUsername(email);
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                 userDetails, null, userDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);

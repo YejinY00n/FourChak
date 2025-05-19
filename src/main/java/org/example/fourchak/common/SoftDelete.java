@@ -9,12 +9,12 @@ import org.example.fourchak.common.error.ExceptionCode;
 @Setter
 @Getter
 @MappedSuperclass
-public abstract class SoftDelete extends BaseEntity{
+public abstract class SoftDelete extends BaseEntity {
 
     private boolean isDeleted;
 
     public void isDelete() {
-        if(this.isDeleted) {
+        if (this.isDeleted) {
             throw new CustomRuntimeException(ExceptionCode.ALREADY_DELETED_USER);
         }
 

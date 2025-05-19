@@ -5,13 +5,13 @@ import lombok.RequiredArgsConstructor;
 import org.example.fourchak.common.error.CustomRuntimeException;
 import org.example.fourchak.common.error.ExceptionCode;
 import org.example.fourchak.config.jwt.JwtUtil;
-import org.example.fourchak.config.security.CustomPasswordEncoder;
 import org.example.fourchak.domain.auth.dto.request.SigninRequest;
 import org.example.fourchak.domain.auth.dto.request.SignupRequest;
 import org.example.fourchak.domain.auth.dto.response.SigninResponse;
 import org.example.fourchak.domain.auth.dto.response.SignupResponse;
 import org.example.fourchak.domain.user.entity.User;
 import org.example.fourchak.domain.user.repository.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class AuthService {
 
     private final UserRepository userRepository;
-    private final CustomPasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
     // 회원가입

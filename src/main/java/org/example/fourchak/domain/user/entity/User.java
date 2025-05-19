@@ -9,7 +9,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.example.fourchak.common.BaseEntity;
 import lombok.Setter;
 import org.example.fourchak.common.SoftDelete;
 import org.example.fourchak.domain.user.enums.UserRole;
@@ -28,6 +27,7 @@ public class User extends SoftDelete {
     private Long id;
 
     private String email;
+
 
     private String username;
 

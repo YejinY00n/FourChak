@@ -52,7 +52,7 @@ public class UserController {
 
     // 패스워드 변경
     @PatchMapping
-    public ResponseEntity patchMyPassword(
+    public ResponseEntity<String> patchMyPassword(
         @RequestHeader("Authorization") String bearerToken,
         @Valid @RequestBody UserPasswordRequest passwordRequest,
         @Valid @RequestBody NewPasswordRequest newPasswordRequest
@@ -60,18 +60,18 @@ public class UserController {
         String token = bearerToken.replace("Bearer", "");
 
         userService.patchUserPassword(token, passwordRequest, newPasswordRequest);
-        return new ResponseEntity("비밀번호 수정이 완료되었습니다.", HttpStatus.OK);
+        return new ResponseEntity<>("비밀번호 수정이 완료되었습니다.", HttpStatus.OK);
     }
 
     // 회원탈퇴
     @DeleteMapping
-    public ResponseEntity deleteMyInfo(
+    public ResponseEntity<String> deleteMyInfo(
         @RequestHeader("Authorization") String bearerToken,
         @Valid @RequestBody UserPasswordRequest passwordRequest
     ) {
         String token = bearerToken.replace("Bearer", "");
 
         userService.deleteUserInfo(token, passwordRequest);
-        return new ResponseEntity("회원탈퇴를 완료 하였습니다.", HttpStatus.OK);
+        return new ResponseEntity<>("회원탈퇴를 완료 하였습니다.", HttpStatus.OK);
     }
 }

@@ -50,6 +50,8 @@ public class JwtUtil {
     }
 
     public String substringToken(String tokenValue) {
+        log.info("JWT TOKEN VALUE: " + tokenValue);
+
         if (StringUtils.hasText(tokenValue) && tokenValue.startsWith(BEARER_PREFIX)) {
             return tokenValue.substring(7);
         }
@@ -57,6 +59,7 @@ public class JwtUtil {
     }
 
     public Claims extractClaims(String token) {
+        log.info("EXTRACT CLAIMS: " + token);
         return Jwts.parserBuilder()
             .setSigningKey(key)
             .build()

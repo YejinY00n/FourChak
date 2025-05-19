@@ -35,13 +35,13 @@ public class SecurityConfig {
                 // "/auth" 인증 없이 필터 통과
                 auth.requestMatchers("/auth/**").permitAll();
 
+                // "/stores/**/coupons/" get 요청 외 OWNER 권한 필요 - 명시성을 위한 구현
+                auth.requestMatchers(HttpMethod.GET, "/stores/**/coupons/**").authenticated();
+                auth.requestMatchers("/stores/**/coupons/**").hasRole("OWNER");
+
                 // "/stores" get 요청 외 OWNER 권한 필요
                 auth.requestMatchers(HttpMethod.GET, "/stores/**").authenticated();
                 auth.requestMatchers("/stores/**").hasRole("OWNER");
-
-                // "/stores/**/coupons/" get 요청 외 OWNER 권한 필요
-                auth.requestMatchers(HttpMethod.GET, "/stores/**/coupons/**").authenticated();
-                auth.requestMatchers("/stores/**/coupons/**").hasRole("OWNER");
 
                 auth.anyRequest().authenticated();
             })

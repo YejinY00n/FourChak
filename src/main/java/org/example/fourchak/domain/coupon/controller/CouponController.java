@@ -35,7 +35,7 @@ public class CouponController {
         if (role.equals(UserRole.USER)) {
             return ResponseEntity.ok(couponService.findCoupon(storeId));
         }
-        if (role.equals(UserRole.ADMIN)) {
+        if (role.equals(UserRole.OWNER)) {
             return ResponseEntity.ok(couponService.findCouponWithAuthor(storeId));
         }
         return ResponseEntity.badRequest().build();

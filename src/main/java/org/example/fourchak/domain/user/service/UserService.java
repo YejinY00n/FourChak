@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.example.fourchak.common.UpdateUtils;
 import org.example.fourchak.common.error.CustomRuntimeException;
 import org.example.fourchak.common.error.ExceptionCode;
-import org.example.fourchak.config.jwt.JwtUtil;
 import org.example.fourchak.domain.user.dto.request.NewPasswordRequest;
 import org.example.fourchak.domain.user.dto.request.UserPasswordRequest;
 import org.example.fourchak.domain.user.dto.request.UsernameAndPhoneRequest;
@@ -21,7 +20,6 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtUtil jwtUtil;
 
     public UserInfoResponse getUserInfoByToken(String email, UserPasswordRequest passwordRequest) {
 
@@ -83,11 +81,8 @@ public class UserService {
     // 토큰으로 정보 가져오고 패스워드를 체크하는 메소드
     private User findInfoAndCheckPassword(String email, UserPasswordRequest passwordRequest) {
 
-        // 토큰에 담긴 email
-        String useremail = jwtUtil.extractClaims(email).get("email", String.class);
-
         // email 확인, 해당 유저정보 가져오기
-        User userInfo = userRepository.findByEmail(useremail)
+        User userInfo = userRepository.findByEmail(email)
             .orElseThrow(() -> new CustomRuntimeException(ExceptionCode.NOT_FOUND_EMAIL));
 
         // 비밀번호 확인

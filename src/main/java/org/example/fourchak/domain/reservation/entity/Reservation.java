@@ -18,6 +18,7 @@ import org.example.fourchak.common.BaseEntity;
 import org.example.fourchak.domain.store.entity.Store;
 import org.example.fourchak.domain.user.entity.User;
 
+
 @Getter
 @Entity
 @Table(name = "reservation")
@@ -42,4 +43,10 @@ public class Reservation extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
+    public Reservation(int peopleNumber, LocalDateTime reservationTime, Store store, User user) {
+        this.peopleNumber = peopleNumber;
+        this.reservationTime = reservationTime;
+        this.store = store;
+        this.user = user;
+    }
 }

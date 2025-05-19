@@ -34,8 +34,10 @@ public enum ExceptionCode implements ErrorCode {
     EMAIL_ALREADY_EXISTS(HttpStatus.CONFLICT, "이미 등록된 회원입니다."),
 
     // 500 Server Error
-    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 내부 오류 혹은 예기치 못한 예외가 발생했습니다.");
+    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 내부 오류 혹은 예기치 못한 예외가 발생했습니다."),
 
+    ACCESS_DENIED_ERROR(HttpStatus.FORBIDDEN, "권한이 없습니다."),
+    NO_SEAT_AVAILABLE(HttpStatus.BAD_REQUEST, "남아있는 좌석수가 부족합니다.");
 
     private final HttpStatus httpStatus;
     private final String message;

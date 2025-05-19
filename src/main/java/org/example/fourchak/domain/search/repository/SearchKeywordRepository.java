@@ -12,7 +12,7 @@ public interface SearchKeywordRepository extends JpaRepository<SearchKeyword, Lo
 
     Optional<SearchKeyword> findByKeyword(String keyword);
 
-    @Query("SELECT s F from SearchKeyword s ORDER BY s.count DESC LIMIT 10")
+    @Query("SELECT s from SearchKeyword s ORDER BY s.count DESC LIMIT 10")
     List<SearchKeyword> findTop10ByOrderByCountDesc();
 
 

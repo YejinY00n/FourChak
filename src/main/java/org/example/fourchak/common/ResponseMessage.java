@@ -80,7 +80,7 @@ public class ResponseMessage<T> {
     /**
      * 요청이 성공했지만 반환할 데이터, 메세지가 없을 때 사용
      */
-    public static <T> ResponseMessage success() {
+    public static <T> ResponseMessage<T> success() {
         return success(null);
     }
 

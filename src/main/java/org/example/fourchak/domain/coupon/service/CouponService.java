@@ -2,6 +2,8 @@ package org.example.fourchak.domain.coupon.service;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.example.fourchak.common.error.BaseException;
+import org.example.fourchak.common.error.ExceptionCode;
 import org.example.fourchak.domain.coupon.dto.CouponAdminResponseDto;
 import org.example.fourchak.domain.coupon.dto.CouponCreateRequestDto;
 import org.example.fourchak.domain.coupon.dto.CouponResponseDto;
@@ -24,13 +26,12 @@ public class CouponService {
         CouponCreateRequestDto requestDto) {
         // 사용자의 소유 가게인지 확인
         if (!isOwnedStore(userId, storeId)) {
-            // TODO: 전역 예외 처리기로 변경
-            throw new IllegalArgumentException("본인 소유의 가게가 아닙니다.");
+            throw new BaseException(ExceptionCode.UNAUTHORIZED_STORE_ACCESS);
         }
 
         Coupon coupon = Coupon.from(requestDto);
         Store store = storeRepository.findById(storeId)
-            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 가게입니다."));
+            .orElseThrow(() -> new BaseException(ExceptionCode.NOT_FOUND_STORE));
         coupon.setStore(store);
 
         // 쿠폰 레포지토리에 저장
@@ -41,7 +42,7 @@ public class CouponService {
     // 일반 사용자 조회
     public List<CouponResponseDto> findCoupon(Long storeId) {
         Store store = storeRepository.findById(storeId).orElseThrow(
-            () -> new IllegalArgumentException("존재하지 않는 가게입니다."));
+            () -> new BaseException(ExceptionCode.NOT_FOUND_STORE));
         List<Coupon> couponList = couponRepository.findAllByStore(store);
         return couponList.stream()
             .map(CouponResponseDto::from).toList();
@@ -50,7 +51,7 @@ public class CouponService {
     // 가게 사장 조회
     public List<CouponAdminResponseDto> findCouponWithAuthor(Long storeId) {
         Store store = storeRepository.findById(storeId).orElseThrow(
-            () -> new IllegalArgumentException("존재하지 않는 가게입니다."));
+            () -> new BaseException(ExceptionCode.NOT_FOUND_STORE));
         List<Coupon> couponList = couponRepository.findAllByStore(store);
         return couponList.stream()
             .map(CouponAdminResponseDto::from).toList();
@@ -60,7 +61,7 @@ public class CouponService {
     @Transactional
     public void updateCoupon(Long couponId, CouponUpdateRequestDto requestDto) {
         Coupon coupon = couponRepository.findById(couponId).orElseThrow(
-            () -> new IllegalArgumentException("존재하지 않는 쿠폰입니다."));
+            () -> new BaseException(ExceptionCode.NOT_FOUND_COUPON));
         coupon.setDiscount(requestDto.getDiscount());
     }
 
@@ -68,13 +69,13 @@ public class CouponService {
     @Transactional
     public void deleteCoupon(Long couponId) {
         Coupon coupon = couponRepository.findById(couponId).orElseThrow(
-            () -> new IllegalArgumentException("존재하지 않는 쿠폰입니다."));
+            () -> new BaseException(ExceptionCode.NOT_FOUND_COUPON));
         couponRepository.delete(coupon);
     }
 
     private boolean isOwnedStore(Long userId, Long targetStoreId) {
         return storeRepository.findById(targetStoreId).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 가게 입니다."))
+                () -> new BaseException(ExceptionCode.NOT_FOUND_STORE))
             .getUser().getId().equals(userId);
     }
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.example.fourchak.common.error.CustomRuntimeException;
 import org.example.fourchak.common.error.ExceptionCode;
+import org.example.fourchak.config.security.CustomUserPrincipal;
 import org.example.fourchak.domain.reservation.dto.requset.ReservationRequestDto;
 import org.example.fourchak.domain.reservation.dto.response.ReservationResponseDto;
 import org.example.fourchak.domain.reservation.entity.Reservation;
@@ -26,7 +27,7 @@ public class ReservationService {
     private final StoreRepository storeRepository;
 
     @Transactional
-    public ReservationResponseDto saveReservation(CustomUserDetail customUserDetail,
+    public ReservationResponseDto saveReservation(CustomUserPrincipal customUserDetail,
         ReservationRequestDto dto, Long storeId) {
 
         Store store = storeRepository.findById(storeId)
@@ -60,7 +61,8 @@ public class ReservationService {
             .toList();
     }
 
-    public List<ReservationResponseDto> findByUserID(Long id, CustomUserDetail customUserDetail) {
+    public List<ReservationResponseDto> findByUserID(Long id,
+        CustomUserPrincipal customUserDetail) {
 
         if (!id.equals(customUserDetail.getId())) {
             throw new CustomRuntimeException(ExceptionCode.ACCESS_DENIED_ERROR);

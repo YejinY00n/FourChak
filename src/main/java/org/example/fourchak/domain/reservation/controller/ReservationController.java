@@ -2,6 +2,7 @@ package org.example.fourchak.domain.reservation.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.example.fourchak.common.ResponseMessage;
+import org.example.fourchak.config.security.CustomUserPrincipal;
 import org.example.fourchak.domain.reservation.dto.requset.ReservationRequestDto;
 import org.example.fourchak.domain.reservation.service.ReservationService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -21,7 +22,7 @@ public class ReservationController {
     @PostMapping("/store/{storeId}/reservation")
     public ResponseMessage<?> saveReservation(
         @PathVariable Long storeId,
-        @AuthenticationPrincipal CustomUserDetail customUserDetail,
+        @AuthenticationPrincipal CustomUserPrincipal customUserDetail,
         @RequestBody ReservationRequestDto reservationRequestDto) {
 
         return ResponseMessage.builder()
@@ -46,7 +47,7 @@ public class ReservationController {
     @GetMapping("/users/{userId}/reservation")
     public ResponseMessage<?> findByUserId(
         @PathVariable Long userId,
-        @AuthenticationPrincipal CustomUserDetail customUserDetail
+        @AuthenticationPrincipal CustomUserPrincipal customUserDetail
     ) {
         return ResponseMessage.builder()
             .statusCode(200)

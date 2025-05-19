@@ -3,6 +3,7 @@ package org.example.fourchak.domain.auth.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.example.fourchak.common.ResponseMessage;
 import org.example.fourchak.domain.auth.dto.request.SigninRequest;
 import org.example.fourchak.domain.auth.dto.request.SignupRequest;
 import org.example.fourchak.domain.auth.dto.response.SigninResponse;
@@ -24,17 +25,22 @@ public class AuthController {
 
     // 회원가입
     @PostMapping("/signup")
-    public ResponseEntity<SignupResponse> signup(
+    public ResponseEntity<ResponseMessage<SignupResponse>> signup(
         @Valid @RequestBody SignupRequest request
     ) {
-        return new ResponseEntity<>(authService.signup(request), HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+            ResponseMessage.success(HttpStatus.CREATED, "회원등록이 완료 되었습니다.",
+                authService.signup(request))
+        );
     }
 
     // 로그인 - 토큰발행
     @PostMapping("/signin")
-    public ResponseEntity<SigninResponse> signin(
+    public ResponseEntity<ResponseMessage<SigninResponse>> signin(
         @Valid @RequestBody SigninRequest request
     ) {
-        return new ResponseEntity<>(authService.signin(request), HttpStatus.OK);
+        return ResponseEntity.ok(
+            ResponseMessage.success("로그인이 완료 되었습니다.", authService.signin(request))
+        );
     }
 }

@@ -29,7 +29,7 @@ public class Waiting extends BaseEntity {
 
     private LocalDateTime reservationTime;
 
-    private int peopleNumber;
+    private int peopleNum;
 
     @Enumerated(EnumType.STRING)
     private Status status;
@@ -42,12 +42,22 @@ public class Waiting extends BaseEntity {
     @JoinColumn(name = "store_id")
     private Store store;
 
-    public Waiting(int waitingNumber, LocalDateTime reservationTime, int peopleNumber,
-        Status status) {
+    public Waiting(int waitingNumber, LocalDateTime reservationTime, int peopleNum,
+        Status status, User user, Store store) {
         this.waitingNumber = waitingNumber;
         this.reservationTime = reservationTime;
-        this.peopleNumber = peopleNumber;
+        this.peopleNum = peopleNum;
         this.status = status;
+        this.user = user;
+        this.store = store;
+    }
+
+    /*
+     * 정적 팩토리 메서드
+     */
+    public static Waiting of(int waitingNumber, LocalDateTime reservationTime, int peopleNumber,
+        Status status, User user, Store store) {
+        return new Waiting(waitingNumber, reservationTime, peopleNumber, status, user, store);
     }
 
     @SuppressWarnings("lombok")

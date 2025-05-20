@@ -9,13 +9,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-@Profile("test")
+@Profile("local")
 @RequiredArgsConstructor
 public class DummyUserDataService {
 
     private final JdbcTemplate jdbcTemplate;
 
-    private final int BATCH_SIZE = 1000;
+    private final int BATCH_SIZE = 10;
 
     private final PasswordEncoder passwordEncoder;
 

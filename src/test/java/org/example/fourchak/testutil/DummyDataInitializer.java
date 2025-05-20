@@ -1,19 +1,19 @@
 package org.example.fourchak.testutil;
 
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 @Component
-@Profile("test")
+@Profile("local")
 @RequiredArgsConstructor
 public class DummyDataInitializer {
 
     private final DummyUserDataService dummyUserDataService;
 
-    @PostConstruct
+    // 사용 할려면 아래 주석만 제거 하세요.
+    //@PostConstruct
     public void init() {
-        dummyUserDataService.insertDummyUsers(1_000_000); // 100만개
+        dummyUserDataService.insertDummyUsers(1_000); // 100만개
     }
 }

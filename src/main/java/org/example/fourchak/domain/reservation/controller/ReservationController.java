@@ -19,7 +19,7 @@ public class ReservationController {
 
     private final ReservationService reservationService;
 
-    @PostMapping("/store/{storeId}/reservation")
+    @PostMapping("/stores/{storeId}/reservation")
     public ResponseMessage<?> saveReservation(
         @PathVariable Long storeId,
         @AuthenticationPrincipal CustomUserPrincipal customUserDetail,

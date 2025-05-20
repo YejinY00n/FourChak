@@ -8,6 +8,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,6 +21,8 @@ import org.hibernate.annotations.Where;
 @Setter
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Table(name = "users")
 @Where(clause = "is_deleted = false")
 public class User extends SoftDelete {
@@ -29,7 +33,7 @@ public class User extends SoftDelete {
 
     @Column(unique = true)
     private String email;
-    
+
     private String username;
 
     private String phone;

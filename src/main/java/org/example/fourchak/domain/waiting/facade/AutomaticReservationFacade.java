@@ -17,7 +17,6 @@ public class AutomaticReservationFacade {
     ReservationService reservationService;
     WaitingService waitingService;
 
-    //store 에서 총 자리수 가져와서 연산하기
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void doIt(DeleteReservationEvent event) {

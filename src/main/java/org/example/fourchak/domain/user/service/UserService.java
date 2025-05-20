@@ -23,7 +23,7 @@ public class UserService {
 
     public UserInfoResponse getUserInfoByToken(String email, UserPasswordRequest passwordRequest) {
 
-        User userInfo = findInfoAndCheckPassword(email, passwordRequest);
+        User userInfo = findInfoAndCheckPassword(email, passwordRequest.getPassword());
 
         return new UserInfoResponse(
             userInfo.getId(),
@@ -37,10 +37,9 @@ public class UserService {
     }
 
     @Transactional
-    public UserInfoResponse putUsernameAndPhone(String email, UsernameAndPhoneRequest request,
-        UserPasswordRequest passwordRequest) {
+    public UserInfoResponse putUsernameAndPhone(String email, UsernameAndPhoneRequest request) {
 
-        User userInfo = findInfoAndCheckPassword(email, passwordRequest);
+        User userInfo = findInfoAndCheckPassword(email, request.getPassword());
 
         // 수정 수행 - null 값이 들어오면 변화 x
         UpdateUtils.updateString(request.getUsername(), userInfo::setUsername);
@@ -50,15 +49,14 @@ public class UserService {
     }
 
     @Transactional
-    public void patchUserPassword(String email, UserPasswordRequest passwordRequest,
-        NewPasswordRequest newPasswordRequest) {
+    public void patchUserPassword(String email, NewPasswordRequest newPasswordRequest) {
 
-        User userInfo = findInfoAndCheckPassword(email, passwordRequest);
+        User userInfo = findInfoAndCheckPassword(email, newPasswordRequest.getPassword());
 
         String encodedPassword = passwordEncoder.encode(newPasswordRequest.getNewPassword());
 
         // 동일한 비밀번호 시
-        if (passwordEncoder.matches(encodedPassword, passwordRequest.getPassword())) {
+        if (passwordEncoder.matches(encodedPassword, newPasswordRequest.getPassword())) {
             throw new CustomRuntimeException(ExceptionCode.DUPLICATE_PASSWORD_CHANGE);
         }
 
@@ -68,7 +66,7 @@ public class UserService {
     @Transactional
     public void deleteUserInfo(String email, UserPasswordRequest passwordRequest) {
 
-        User userInfo = findInfoAndCheckPassword(email, passwordRequest);
+        User userInfo = findInfoAndCheckPassword(email, passwordRequest.getPassword());
 
         /* Hard delete
         userRepository.delete(userInfo);
@@ -79,13 +77,13 @@ public class UserService {
     }
 
     // 토큰으로 정보 가져오고 패스워드를 체크하는 메소드
-    private User findInfoAndCheckPassword(String email, UserPasswordRequest passwordRequest) {
+    private User findInfoAndCheckPassword(String email, String passwordRequest) {
         // email 확인, 해당 유저정보 가져오기
         User userInfo = userRepository.findByEmail(email)
             .orElseThrow(() -> new CustomRuntimeException(ExceptionCode.NOT_FOUND_EMAIL));
 
         // 비밀번호 확인
-        if (!passwordEncoder.matches(passwordRequest.getPassword(), userInfo.getPassword())) {
+        if (!passwordEncoder.matches(passwordRequest, userInfo.getPassword())) {
             throw new CustomRuntimeException(ExceptionCode.MISS_MATCH_PASSWORD);
         }
 

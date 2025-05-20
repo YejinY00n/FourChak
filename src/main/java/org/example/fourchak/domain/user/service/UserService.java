@@ -1,5 +1,6 @@
 package org.example.fourchak.domain.user.service;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.fourchak.common.UpdateUtils;
 import org.example.fourchak.common.error.CustomRuntimeException;
@@ -21,9 +22,29 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UserInfoResponse getUserInfoByToken(String email, UserPasswordRequest passwordRequest) {
+    public UserInfoResponse getUserInfo(String email, UserPasswordRequest passwordRequest) {
 
         User userInfo = findInfoAndCheckPassword(email, passwordRequest.getPassword());
+
+        return new UserInfoResponse(
+            userInfo.getId(),
+            userInfo.getEmail(),
+            userInfo.getUsername(),
+            userInfo.getPhone(),
+            userInfo.getUserRole().toString(),
+            userInfo.getCreatedAt(),
+            userInfo.getModifiedAt()
+        );
+    }
+
+    public UserInfoResponse getUserInfoFindIndex(Long id,
+        @Valid UserPasswordRequest passwordRequest) {
+
+        User userInfo = userRepository.findUserByOnwerIdOrElseThrow(id);
+
+        if (!passwordEncoder.matches(passwordRequest.toString(), userInfo.getPassword())) {
+            throw new CustomRuntimeException(ExceptionCode.MISS_MATCH_PASSWORD);
+        }
 
         return new UserInfoResponse(
             userInfo.getId(),
@@ -90,5 +111,6 @@ public class UserService {
 
         return userInfo;
     }
+
 
 }

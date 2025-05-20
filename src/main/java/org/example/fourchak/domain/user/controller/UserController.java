@@ -27,7 +27,7 @@ public class UserController {
 
     private final UserService userService;
 
-    // 토큰으로 유저 정보 찾기
+    // email로 유저 정보 찾기
     @GetMapping
     public ResponseEntity<ResponseMessage<UserInfoResponse>> getMyInfo(
         @AuthenticationPrincipal CustomUserPrincipal userPrincipal,
@@ -35,9 +35,22 @@ public class UserController {
     ) {
         return ResponseEntity.status(HttpStatus.OK).body(
             ResponseMessage.success("프로필 조회를 하였습니다.",
-                userService.getUserInfoByToken(userPrincipal.getUsername(), passwordRequest))
+                userService.getUserInfo(userPrincipal.getUsername(), passwordRequest))
         );
     }
+
+    // 인덱싱(id)로 유저 정보 찾기 - 최적화,  mysql에서는 기본적으로 B+ tree 구조로 인덱싱 되어 있음
+    @GetMapping("/indexing")
+    public ResponseEntity<ResponseMessage<UserInfoResponse>> getMyInfoFindIndex(
+        @AuthenticationPrincipal CustomUserPrincipal userPrincipal,
+        @Valid @RequestBody UserPasswordRequest passwordRequest
+    ) {
+        return ResponseEntity.status(HttpStatus.OK).body(
+            ResponseMessage.success("프로필 조회를 하였습니다.",
+                userService.getUserInfoFindIndex(userPrincipal.getId(), passwordRequest))
+        );
+    }
+
 
     // 유저이름, 전화번호 수정
     @PutMapping

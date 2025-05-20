@@ -12,7 +12,7 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.example.fourchak.domain.coupon.dto.CouponCreateRequestDto;
+import org.example.fourchak.domain.coupon.dto.request.CouponCreateRequestDto;
 import org.example.fourchak.domain.store.entity.Store;
 
 @Entity
@@ -45,5 +45,15 @@ public class Coupon {
 
     public static Coupon from(CouponCreateRequestDto requestDto) {
         return new Coupon(requestDto.getDiscount(), requestDto.getCount());
+    }
+
+    public void use() {
+        if (isExists()) {
+            this.count -= 1;
+        }
+    }
+
+    public boolean isExists() {
+        return this.count > 0;
     }
 }

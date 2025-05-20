@@ -1,4 +1,4 @@
-package org.example.fourchak.domain.coupon.dto;
+package org.example.fourchak.domain.coupon.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

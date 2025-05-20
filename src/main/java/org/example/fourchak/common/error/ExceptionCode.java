@@ -25,6 +25,7 @@ public enum ExceptionCode implements ErrorCode {
     // 403 Forbidden = 권한이 없을 때
     NO_OWNER_AUTHORITY(HttpStatus.FORBIDDEN, "사장의 권한이 없습니다."),
     UNAUTHORIZED_STORE_ACCESS(HttpStatus.UNAUTHORIZED, "사용자가 소유한 가게가 아닙니다."),
+    UNAUTHORIZED_USERCOUPON_ACCESS(HttpStatus.UNAUTHORIZED, "사용자가 소유한 쿠폰이 아닙니다."),
 
     // 404 Not Found
     CANT_FIND_DATA(HttpStatus.NOT_FOUND, "해당 데이터를 찾을 수 없습니다."),
@@ -33,6 +34,7 @@ public enum ExceptionCode implements ErrorCode {
     NOT_FOUND_EMAIL(HttpStatus.NOT_FOUND, "해당 이메일을 찾을 수 없습니다."),
     NOT_FOUND_STORE(HttpStatus.NOT_FOUND, "해당 가게를 찾을 수 없습니다."),
     NOT_FOUND_COUPON(HttpStatus.NOT_FOUND, "해당 쿠폰을 찾을 수 없습니다."),
+    NOT_FOUND_USERCOUPON(HttpStatus.NOT_FOUND, "해당 발급받은 쿠폰을 찾을 수 없습니다."),
 
     // 409 Conflict = 서버와 충돌, 데이터가 이미 존재할때(400 보다 명확함)
     EMAIL_ALREADY_EXISTS(HttpStatus.CONFLICT, "이미 등록된 회원입니다."),

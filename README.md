@@ -1,8 +1,5 @@
 # 🍽️ FourChak
 
-![image](https://github.com/user-attachments/assets/7afa7809-4c0e-4c65-86a0-669c431993b7)
-
-
 ## 팀원 및 역할
 ```
 

@@ -20,7 +20,7 @@ public class UserCouponController {
     private final UserCouponService userCouponService;
 
     // TODO: 추후 PreAuthorized 추가
-    @PostMapping("/stores/{storeId}/coupons/{couponId}/issue")
+    @PostMapping("/coupons/{couponId}/issue")
     ResponseEntity<ResponseMessage<CouponResponseDto>> issueUserCoupon(
         @AuthenticationPrincipal CustomUserPrincipal userPrincipal, @PathVariable Long couponId) {
         userCouponService.issueCoupon(userPrincipal.getUser(), couponId);

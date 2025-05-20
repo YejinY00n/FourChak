@@ -50,8 +50,8 @@ public class CouponController {
             return ResponseEntity.ok(
                 ResponseMessage.success(couponService.findCouponWithAuthor(storeId)));
         }
-        // TODO: 공통 응답객체로 수정
-        return ResponseEntity.badRequest().build();
+        return ResponseEntity.badRequest().body(
+            ResponseMessage.error(HttpStatus.BAD_REQUEST, "쿠폰 조회에 실패하였습니다."));
     }
 
     @PatchMapping("/stores/{storeId}/coupons/{couponId}")

@@ -4,9 +4,9 @@ import java.util.Collection;
 import lombok.RequiredArgsConstructor;
 import org.example.fourchak.common.ResponseMessage;
 import org.example.fourchak.config.security.CustomUserPrincipal;
-import org.example.fourchak.domain.coupon.dto.CouponCreateRequestDto;
-import org.example.fourchak.domain.coupon.dto.CouponResponseDto;
-import org.example.fourchak.domain.coupon.dto.CouponUpdateRequestDto;
+import org.example.fourchak.domain.coupon.dto.request.CouponCreateRequestDto;
+import org.example.fourchak.domain.coupon.dto.request.CouponUpdateRequestDto;
+import org.example.fourchak.domain.coupon.dto.response.CouponResponseDto;
 import org.example.fourchak.domain.coupon.service.CouponService;
 import org.example.fourchak.domain.user.enums.UserRole;
 import org.springframework.http.HttpStatus;
@@ -37,7 +37,7 @@ public class CouponController {
     }
 
     @GetMapping("/stores/{storeId}/coupons")
-    ResponseEntity<ResponseMessage<?>> findCouponForUsers(
+    ResponseEntity<ResponseMessage<?>> findCoupon(
         @AuthenticationPrincipal CustomUserPrincipal userPrincipal, @PathVariable Long storeId) {
         Collection<? extends GrantedAuthority> authorities = userPrincipal.getAuthorities();
         if (authorities.stream().anyMatch(

@@ -26,6 +26,11 @@ public class UserCouponService {
         Coupon coupon = couponRepository.findById(couponId)
             .orElseThrow(() -> new BaseException(ExceptionCode.NOT_FOUND_COUPON));
 
+        // 이미 발급받았는지 확인
+        if (!hasIssuedCoupon(user.getId(), couponId)) {
+            throw new BaseException(ExceptionCode.HAS_ISSUED_COUPON);
+        }
+
         UserCoupon userCoupon = UserCoupon.from(user, coupon);
 
         // 쿠폰 수량 차감 후 저장
@@ -58,6 +63,10 @@ public class UserCouponService {
     }
 
     private boolean hasCoupon(Long userId, Long userCouponId) {
-        return userCouponRepository.existsByUserIdAndCouponId(userId, userCouponId);
+        return userCouponRepository.existsByUserIdAndId(userId, userCouponId);
+    }
+
+    private boolean hasIssuedCoupon(Long userId, Long couponId) {
+        return userCouponRepository.existsByUserIdAndCouponId(userId, couponId);
     }
 }

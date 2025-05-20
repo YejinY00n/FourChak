@@ -99,7 +99,6 @@ public class UserService {
 
     // 토큰으로 정보 가져오고 패스워드를 체크하는 메소드
     private User findInfoAndCheckPassword(String email, String passwordRequest) {
-
         // email 확인, 해당 유저정보 가져오기
         User userInfo = userRepository.findByEmail(email)
             .orElseThrow(() -> new CustomRuntimeException(ExceptionCode.NOT_FOUND_EMAIL));

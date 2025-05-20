@@ -4,10 +4,10 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.example.fourchak.common.error.BaseException;
 import org.example.fourchak.common.error.ExceptionCode;
-import org.example.fourchak.domain.coupon.dto.CouponAdminResponseDto;
-import org.example.fourchak.domain.coupon.dto.CouponCreateRequestDto;
-import org.example.fourchak.domain.coupon.dto.CouponResponseDto;
-import org.example.fourchak.domain.coupon.dto.CouponUpdateRequestDto;
+import org.example.fourchak.domain.coupon.dto.request.CouponCreateRequestDto;
+import org.example.fourchak.domain.coupon.dto.request.CouponUpdateRequestDto;
+import org.example.fourchak.domain.coupon.dto.response.CouponAdminResponseDto;
+import org.example.fourchak.domain.coupon.dto.response.CouponResponseDto;
 import org.example.fourchak.domain.coupon.entity.Coupon;
 import org.example.fourchak.domain.coupon.repository.CouponRepository;
 import org.example.fourchak.domain.store.entity.Store;
@@ -43,16 +43,14 @@ public class CouponService {
     public List<CouponResponseDto> findCoupon(Long storeId) {
         Store store = storeRepository.findById(storeId).orElseThrow(
             () -> new BaseException(ExceptionCode.NOT_FOUND_STORE));
-        List<Coupon> couponList = couponRepository.findAllByStore(store);
+        List<Coupon> couponList = couponRepository.findAllByStoreId(storeId);
         return couponList.stream()
             .map(CouponResponseDto::from).toList();
     }
 
     // 가게 사장 조회
     public List<CouponAdminResponseDto> findCouponWithAuthor(Long storeId) {
-        Store store = storeRepository.findById(storeId).orElseThrow(
-            () -> new BaseException(ExceptionCode.NOT_FOUND_STORE));
-        List<Coupon> couponList = couponRepository.findAllByStore(store);
+        List<Coupon> couponList = couponRepository.findAllByStoreId(storeId);
         return couponList.stream()
             .map(CouponAdminResponseDto::from).toList();
     }
@@ -77,5 +75,13 @@ public class CouponService {
         return storeRepository.findById(targetStoreId).orElseThrow(
                 () -> new BaseException(ExceptionCode.NOT_FOUND_STORE))
             .getUser().getId().equals(userId);
+    }
+
+    // 쿠폰 사용
+    @Transactional
+    public void useCoupon(Long couponId) {
+        Coupon coupon = couponRepository.findById(couponId)
+            .orElseThrow(() -> new BaseException(ExceptionCode.NOT_FOUND_COUPON));
+        coupon.use();
     }
 }

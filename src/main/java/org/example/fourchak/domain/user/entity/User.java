@@ -7,15 +7,18 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.example.fourchak.common.SoftDelete;
+import org.example.fourchak.domain.coupon.entity.UserCoupon;
 import org.example.fourchak.domain.user.enums.UserRole;
 import org.hibernate.annotations.Where;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 
 @Getter
 @Setter
@@ -42,6 +45,9 @@ public class User extends SoftDelete {
 
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
+
+    @OneToMany(mappedBy = "user")
+    private List<UserCoupon> userCoupons;
 
     public User(String email, String username, String phone, String password, String userRole) {
         this.email = email;

@@ -35,6 +35,9 @@ public class SecurityConfig {
                 // "/auth" 인증 없이 필터 통과
                 auth.requestMatchers("/auth/**").permitAll();
 
+                // "/store/*/reservation" USER도 허용
+                auth.requestMatchers("/stores/*/reservation").hasRole("USER");
+
                 // "/stores/**/coupons/" get 요청 외 OWNER 권한 필요 - 명시성을 위한 구현
                 auth.requestMatchers(HttpMethod.GET, "/coupons/**").authenticated();
                 auth.requestMatchers("/coupons/**").hasRole("OWNER");

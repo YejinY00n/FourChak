@@ -17,15 +17,11 @@ import org.example.fourchak.common.SoftDelete;
 import org.example.fourchak.domain.coupon.entity.UserCoupon;
 import org.example.fourchak.domain.user.enums.UserRole;
 import org.hibernate.annotations.Where;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 
 @Getter
 @Setter
 @Entity
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
 @Table(name = "users")
 @Where(clause = "is_deleted = false")
 public class User extends SoftDelete {

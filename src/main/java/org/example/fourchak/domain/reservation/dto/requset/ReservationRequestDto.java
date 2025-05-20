@@ -13,6 +13,7 @@ public class ReservationRequestDto {
 
     private LocalDateTime reservationTime;
 
+
     public ReservationRequestDto(int peopleNumber, LocalDateTime reservationTime) {
         this.peopleNumber = peopleNumber;
         this.reservationTime = reservationTime;

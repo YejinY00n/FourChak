@@ -67,7 +67,7 @@ public class ReservationConcurrencyTest {
                         LocalDateTime.now().plusDays(1));
                     CustomUserPrincipal principal = new CustomUserPrincipal(user);
 
-                    reservationService.saveReservation(principal, dto, store.getId());
+                    reservationService.saveReservation(principal, dto, store.getId(), null);
 
                     successCount.incrementAndGet();
                     System.out.println("예약 성공: " + idx);
@@ -96,4 +96,6 @@ public class ReservationConcurrencyTest {
             .isEqualTo(threadCount);
     }
 }
+
+
 

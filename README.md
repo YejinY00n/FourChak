@@ -79,6 +79,10 @@ API 엔드포인트별 권한 설정
 
 #### 2. Cache 검색 기능 구현
 
+#### 3. 동시성 제어
+
+#### 4. 인덱싱
+
 ---
 
 ## 기술 스택
@@ -97,7 +101,7 @@ API 엔드포인트별 권한 설정
 ---
 
 ### 변수 지정표
-![image](https://github.com/user-attachments/assets/efac7732-9ea7-4b29-8535-9c1a416549da)
+[4조 - 초기 변수 저장.pdf](https://github.com/user-attachments/files/20322731/4.-.pdf)
 
 ---
 

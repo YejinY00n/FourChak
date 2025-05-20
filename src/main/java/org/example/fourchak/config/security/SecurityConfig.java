@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -19,6 +20,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity(prePostEnabled = true)
 @RequiredArgsConstructor
 public class SecurityConfig {
 
@@ -39,8 +41,8 @@ public class SecurityConfig {
                 auth.requestMatchers("/stores/*/reservation").hasRole("USER");
 
                 // "/stores/**/coupons/" get 요청 외 OWNER 권한 필요 - 명시성을 위한 구현
-                auth.requestMatchers(HttpMethod.GET, "/coupons/**").authenticated();
-                auth.requestMatchers("/coupons/**").hasRole("OWNER");
+                auth.requestMatchers(HttpMethod.GET, "/stores/*/coupons/**").authenticated();
+                auth.requestMatchers("/stores/*/coupons/**").hasRole("OWNER");
 
                 // "/stores" get 요청 외 OWNER 권한 필요
                 auth.requestMatchers(HttpMethod.GET, "/stores/**").authenticated();

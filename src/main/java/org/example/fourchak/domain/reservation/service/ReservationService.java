@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.fourchak.common.error.CustomRuntimeException;
 import org.example.fourchak.common.error.ExceptionCode;
 import org.example.fourchak.config.security.CustomUserPrincipal;
+import org.example.fourchak.domain.reservation.dto.event.DeleteReservationEvent;
 import org.example.fourchak.domain.reservation.dto.requset.ReservationRequestDto;
 import org.example.fourchak.domain.reservation.dto.response.ReservationResponseDto;
 import org.example.fourchak.domain.reservation.entity.Reservation;
@@ -13,7 +14,9 @@ import org.example.fourchak.domain.store.entity.Store;
 import org.example.fourchak.domain.store.repository.StoreRepository;
 import org.example.fourchak.domain.user.entity.User;
 import org.example.fourchak.domain.user.repository.UserRepository;
+import org.example.fourchak.domain.waiting.repository.WaitingRepository;
 import org.example.fourchak.reservation.repository.ReservationRepository;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +28,8 @@ public class ReservationService {
     private final ReservationRepository reservationRepository;
     private final UserRepository userRepository;
     private final StoreRepository storeRepository;
+    private final WaitingRepository waitingRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Transactional
     public ReservationResponseDto saveReservation(CustomUserPrincipal customUserDetail,
@@ -74,13 +79,21 @@ public class ReservationService {
 
     @Transactional
     public void deleteReserve(Long id) {
-        reservationRepository.delete(reservationRepository.findByIdOrElseThrow(id));
+        Reservation reservation = reservationRepository.findByIdOrElseThrow(id);
+        reservationRepository.delete(reservation);
+
+        // 대기자가 있는지 확인하고 있으면 예약 삭제 이벤트 발송
+        if (waitingRepository.existsByStoreIdAndReservationTime(reservation.getStore().getId(),
+            reservation.getReservationTime())) {
+            eventPublisher.publishEvent(DeleteReservationEvent.from(reservation));
+        }
     }
 
     @Transactional
     @Scheduled(cron = "0 0 * * * *")
     public void deleteExpired() {
         reservationRepository.deleteByReservationTimeBefore(LocalDateTime.now());
+
     }
 
     public int countReservationPeopleAtTime(Long storeId, LocalDateTime reservationTime) {
@@ -92,4 +105,13 @@ public class ReservationService {
 
     }
 
+    /*
+    예약 취소시 대기 걸어놓은 유저의 자동 예약만을 위한 예약 저장 메서드
+     */
+    public void justSave(int peopleNumber, LocalDateTime reservationTime, Long storeId,
+        Long userId) {
+        Reservation reservation = new Reservation(peopleNumber, reservationTime,
+            storeRepository.getReferenceById(storeId), userRepository.getReferenceById(userId));
+        reservationRepository.save(reservation);
+    }
 }

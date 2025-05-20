@@ -60,6 +60,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-cache'
     // Redis 캐싱을 사용할 경우
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+    // test용
+    testImplementation 'com.h2database:h2'
 }
 
 tasks.named('test') {

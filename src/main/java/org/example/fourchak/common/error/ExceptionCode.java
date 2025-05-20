@@ -17,6 +17,9 @@ public enum ExceptionCode implements ErrorCode {
     DUPLICATE_PASSWORD_CHANGE(HttpStatus.BAD_REQUEST, "동일한 비밀번호로는 변경할 수 없습니다."),
     VALID_ERROR(HttpStatus.BAD_REQUEST, "Validation 이 유효하지 않습니다"),
     HAS_ISSUED_COUPON(HttpStatus.BAD_REQUEST, "이미 발급받은 쿠폰입니다."),
+    MISMATCH_COUPON_STORE(HttpStatus.BAD_REQUEST, "해당 가게의 쿠폰이 아닙니다"),
+    ALREADY_USED_COUPON(HttpStatus.BAD_REQUEST, "이미 사용된 쿠폰입니다"),
+
 
     // 401 Unauthorized = 인증이 안될 때
     INVALID_JWT_SIGNATURE(HttpStatus.UNAUTHORIZED, "유효하지 않는 JWT 서명입니다."),

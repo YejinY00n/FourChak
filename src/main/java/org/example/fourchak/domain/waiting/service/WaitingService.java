@@ -36,7 +36,8 @@ public class WaitingService {
         Long userId = dto.getUserId();
 
         // 대기순위 결정
-        List<Waiting> waitingList = waitingRepository.findByStoreIdAndReservationTime(storeId,
+        List<Waiting> waitingList = waitingRepository.findWithLockByStoreIdAndReservationTime(
+            storeId,
             reservationTime);
         int waitingNumber = waitingList.size() + 1;
 
@@ -91,7 +92,7 @@ public class WaitingService {
         Long storeId = event.getStoreId();
 
         // 순위에 상관 없이 남은 자리가 예약자 수 보다 작거나 같은 사람부터 예약 등록
-        List<Waiting> waitingList = waitingRepository.findByStoreIdAndReservationTime(
+        List<Waiting> waitingList = waitingRepository.findWithLockByStoreIdAndReservationTime(
             storeId, reservationTime);
 
         int index = 0;

@@ -7,6 +7,7 @@ import org.example.fourchak.common.error.ExceptionCode;
 import org.example.fourchak.domain.coupon.dto.response.UserCouponResponse;
 import org.example.fourchak.domain.coupon.entity.Coupon;
 import org.example.fourchak.domain.coupon.entity.UserCoupon;
+import org.example.fourchak.domain.coupon.redis.LockService;
 import org.example.fourchak.domain.coupon.repository.CouponRepository;
 import org.example.fourchak.domain.coupon.repository.UserCouponRepository;
 import org.example.fourchak.domain.user.entity.User;
@@ -19,6 +20,7 @@ public class UserCouponService {
 
     private final UserCouponRepository userCouponRepository;
     private final CouponRepository couponRepository;
+    private final LockService lockService;
 
     @Transactional
     public void issueCoupon(User user, Long couponId) {
@@ -27,7 +29,7 @@ public class UserCouponService {
             .orElseThrow(() -> new BaseException(ExceptionCode.NOT_FOUND_COUPON));
 
         // 이미 발급받았는지 확인
-        if (!hasIssuedCoupon(user.getId(), couponId)) {
+        if (hasIssuedCoupon(user.getId(), couponId)) {
             throw new BaseException(ExceptionCode.HAS_ISSUED_COUPON);
         }
 
@@ -36,6 +38,17 @@ public class UserCouponService {
         // 쿠폰 수량 차감 후 저장
         coupon.use();               // 수량 남아있는 지 확인 후 차감
         userCouponRepository.save(userCoupon);
+    }
+
+    public void issueCouponWithLock(User user, Long couponId) {
+        String key = "coupon:" + couponId;
+        try {
+            lockService.executeWithLock(key, () -> {
+                issueCoupon(user, couponId);
+            });
+        } catch (InterruptedException e) {
+            throw new BaseException(ExceptionCode.INTERNAL_SERVER_ERROR);
+        }
     }
 
     public List<UserCouponResponse> findUserCoupons(Long userId) {

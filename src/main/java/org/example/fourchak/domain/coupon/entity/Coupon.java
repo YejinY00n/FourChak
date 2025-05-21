@@ -12,6 +12,8 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.example.fourchak.common.error.BaseException;
+import org.example.fourchak.common.error.ExceptionCode;
 import org.example.fourchak.domain.coupon.dto.request.CouponCreateRequestDto;
 import org.example.fourchak.domain.store.entity.Store;
 
@@ -50,6 +52,8 @@ public class Coupon {
     public void use() {
         if (isExists()) {
             this.count -= 1;
+        } else {
+            throw new BaseException(ExceptionCode.SOLD_OUT_COUPON);
         }
     }
 

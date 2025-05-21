@@ -22,10 +22,5 @@ public interface WaitingRepository extends JpaRepository<Waiting, Long> {
 
     void deleteByReservationTimeBefore(LocalDateTime reservationTime);
 
-    @Query("SELECT w FROM Waiting w JOIN Reservation r ON w.user.id")
-    Optional<Waiting> findByReservationId(@Param("reservationId") Long reservationId);
-
     boolean existsByStoreIdAndReservationTime(Long storeId, LocalDateTime reservationTime);
-
-    int countByStoreIdAndReservationTime(Long storeId, LocalDateTime reservationTime);
 }

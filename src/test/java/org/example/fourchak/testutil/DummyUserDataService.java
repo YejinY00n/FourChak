@@ -9,29 +9,29 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-@Profile("local")
+@Profile("test")
 @RequiredArgsConstructor
 public class DummyUserDataService {
 
     private final JdbcTemplate jdbcTemplate;
 
-    private final int BATCH_SIZE = 10;
+    private final int BATCH_SIZE = 100;
 
     private final PasswordEncoder passwordEncoder;
 
     public void insertDummyUsers(int totalCount) {
-        String sql = "INSERT INTO users (email, username, phone, password, user_role) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO users (email, username, phone, password, user_role,is_deleted) VALUES (?, ?, ?, ?, ?,?)";
 
         List<Object[]> batchArgs = new ArrayList<>();
 
         for (int i = 1; i <= totalCount; i++) {
             String email = "email" + i;
             String username = "user" + i;
-            String phone = "0100000" + String.format("%04d", i);
-            String password = passwordEncoder.encode("1234"); // 실제 서비스라면 인코딩된 비밀번호 넣어야 함
+            String phone = "010-0000-0000";
+            String password = passwordEncoder.encode("1234");
             String userRole = "USER";
 
-            batchArgs.add(new Object[]{email, username, phone, password, userRole});
+            batchArgs.add(new Object[]{email, username, phone, password, userRole, false});
 
             if (i % BATCH_SIZE == 0) {
                 jdbcTemplate.batchUpdate(sql, batchArgs);

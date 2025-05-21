@@ -11,9 +11,11 @@ import org.example.fourchak.domain.user.dto.request.UsernameAndPhoneRequest;
 import org.example.fourchak.domain.user.dto.response.UserInfoResponse;
 import org.example.fourchak.domain.user.entity.User;
 import org.example.fourchak.domain.user.repository.UserRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
@@ -40,9 +42,10 @@ public class UserService {
     public UserInfoResponse getUserInfoFindIndex(Long id,
         @Valid UserPasswordRequest passwordRequest) {
 
-        User userInfo = userRepository.findUserByOnwerIdOrElseThrow(id);
+        User userInfo = userRepository.findById(id).orElseThrow(() ->
+            new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 id입니다."));
 
-        if (!passwordEncoder.matches(passwordRequest.toString(), userInfo.getPassword())) {
+        if (!passwordEncoder.matches(passwordRequest.getPassword(), userInfo.getPassword())) {
             throw new CustomRuntimeException(ExceptionCode.MISS_MATCH_PASSWORD);
         }
 

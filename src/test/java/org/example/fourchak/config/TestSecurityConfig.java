@@ -18,9 +18,7 @@ public class TestSecurityConfig {
             .sessionManagement(sm
                 -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth
-                -> {
-                auth.anyRequest().permitAll();
-            });
+                -> auth.anyRequest().permitAll());
         return http.build();
     }
 

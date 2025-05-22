@@ -17,7 +17,9 @@ public class RedisLockRepository {
             .setIfAbsent(key.toString(), "lock", Duration.ofMillis(3000));  // 3초 동안 락 유효
     }
 
-    public Boolean unlock(Object key) {
-        return redisTemplate.delete(key.toString());
+    public void unlock(Object key) {
+        if (redisTemplate.hasKey(key.toString())) {
+            redisTemplate.delete(key.toString());
+        }
     }
 }

@@ -30,8 +30,10 @@ public class WaitingService {
     private final UserRepository userRepository;
     private final StoreRepository storeRepository;
 
+    @Transactional
     public RegisterWaitingResponse register(Long storeId, RegisterWaitingRequest dto) {
         LocalDateTime reservationTime = dto.getReservationTime();
+
         int peopleNum = dto.getPeopleNum();
         Long userId = dto.getUserId();
 
@@ -70,7 +72,7 @@ public class WaitingService {
     현재 유저의 활성화 되어있는 예약 대기 목록 조회
      */
     public List<GetMyWaitingResponse> getMyWaiting(Long userId) {
-        List<Waiting> myWaits = waitingRepository.findByUserIdAndStatus(userId);
+        List<Waiting> myWaits = waitingRepository.findByUserId(userId);
 
         //Entity -> DTO 변환
         return myWaits.stream()

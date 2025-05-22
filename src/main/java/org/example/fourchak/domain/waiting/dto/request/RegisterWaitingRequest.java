@@ -3,12 +3,16 @@ package org.example.fourchak.domain.waiting.dto.request;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@AllArgsConstructor
+
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class RegisterWaitingRequest {
 
-    private final LocalDateTime reservationTime;
-    private final int peopleNum;
-    private final Long userId;
+    private LocalDateTime reservationTime;
+    private int peopleNum;
+    private Long userId;
+
 }

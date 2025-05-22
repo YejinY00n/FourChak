@@ -21,6 +21,7 @@ public class AutomaticReservationFacade {
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void doIt(DeleteReservationEvent event) {
+        System.out.println("이벤트 수신");
         int availableSeat = reservationService.countReservationPeopleAtTime(event.getStoreId(),
             event.getReservationTime());
 

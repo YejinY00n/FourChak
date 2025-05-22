@@ -24,6 +24,7 @@ public class ReservationController {
         @PathVariable Long storeId,
         @AuthenticationPrincipal CustomUserPrincipal customUserDetail,
         @RequestBody ReservationRequestDto reservationRequestDto) {
+        System.out.println(reservationRequestDto.getReservationTime());
 
         return ResponseMessage.builder()
             .statusCode(201)

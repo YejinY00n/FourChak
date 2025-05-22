@@ -34,9 +34,12 @@ public class SecurityConfig {
                 -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth
                 -> {
+
                 // "/auth" 인증 없이 필터 통과
                 auth.requestMatchers("/auth/**").permitAll();
 
+                // "/stores/*/waiting" USER도 허용
+                auth.requestMatchers("/stores/*/waiting").hasRole("USER");
                 // "/store/*/reservation" USER도 허용
                 auth.requestMatchers("/stores/*/reservation").hasRole("USER");
 

@@ -19,6 +19,7 @@ public enum ExceptionCode implements ErrorCode {
     HAS_ISSUED_COUPON(HttpStatus.BAD_REQUEST, "이미 발급받은 쿠폰입니다."),
     MISMATCH_COUPON_STORE(HttpStatus.BAD_REQUEST, "해당 가게의 쿠폰이 아닙니다"),
     ALREADY_USED_COUPON(HttpStatus.BAD_REQUEST, "이미 사용된 쿠폰입니다"),
+    LOCK_EXCEPTION(HttpStatus.BAD_REQUEST, "요청 시간이 초과되었습니다."),
 
 
     // 401 Unauthorized = 인증이 안될 때

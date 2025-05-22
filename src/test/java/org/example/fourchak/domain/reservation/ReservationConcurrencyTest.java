@@ -46,7 +46,7 @@ public class ReservationConcurrencyTest {
     static MySQLContainer<?> mysql = new MySQLContainer<>("mysql:8.0")
         .withDatabaseName("FourChak")
         .withUsername("root")
-        .withPassword("qkqh794685");
+        .withPassword("   ");
 
     // Redis 컨테이너 설정
     @Container

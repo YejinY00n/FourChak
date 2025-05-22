@@ -4,13 +4,15 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.fourchak.common.annotation.LockKey;
-import org.example.fourchak.common.annotation.WithLock;
+import org.example.fourchak.common.annotation.WithLettuceLock;
+import org.example.fourchak.common.annotation.WithRedissonLock;
 import org.example.fourchak.common.error.BaseException;
 import org.example.fourchak.common.error.ExceptionCode;
 import org.example.fourchak.domain.coupon.dto.response.UserCouponResponse;
 import org.example.fourchak.domain.coupon.entity.Coupon;
 import org.example.fourchak.domain.coupon.entity.UserCoupon;
 import org.example.fourchak.domain.coupon.lock.LockService;
+import org.example.fourchak.domain.coupon.lock.NameLockWithDataSource;
 import org.example.fourchak.domain.coupon.lock.NameLockWithJdbcTemplate;
 import org.example.fourchak.domain.coupon.repository.CouponRepository;
 import org.example.fourchak.domain.coupon.repository.UserCouponRepository;
@@ -29,6 +31,7 @@ public class UserCouponService {
     private final CouponRepository couponRepository;
     private final LockService lockService;
     private final NameLockWithJdbcTemplate nameLockWithJdbcTemplate;
+    private final NameLockWithDataSource nameLockWithDataSource;
 
     @Lazy
     @Autowired
@@ -55,7 +58,7 @@ public class UserCouponService {
         userCouponRepository.save(userCoupon);
     }
 
-    public void issueCouponWithService(User user, Long couponId) {
+    public void issueCouponLettuceWithService(User user, Long couponId) {
         String key = "coupon:" + couponId;
         try {
             lockService.executeWithLock(key, () -> {
@@ -67,8 +70,8 @@ public class UserCouponService {
     }
 
     @Transactional
-    @WithLock
-    public void issueCouponWithAOP(User user, @LockKey Long couponId) {
+    @WithLettuceLock
+    public void issueCouponLettuceWithAOP(User user, @LockKey Long couponId) {
         // 존재하는 쿠폰인지 확인
         Coupon coupon = couponRepository.findById(couponId)
             .orElseThrow(() -> new BaseException(ExceptionCode.NOT_FOUND_COUPON));
@@ -88,6 +91,27 @@ public class UserCouponService {
     }
 
     @Transactional
+    @WithRedissonLock
+    public void issueCouponRedissonWithAOP(User user, @LockKey Long couponId) {
+        // 존재하는 쿠폰인지 확인
+        Coupon coupon = couponRepository.findById(couponId)
+            .orElseThrow(() -> new BaseException(ExceptionCode.NOT_FOUND_COUPON));
+
+        // 이미 발급받았는지 확인
+        if (hasIssuedCoupon(user.getId(), couponId)) {
+            throw new BaseException(ExceptionCode.HAS_ISSUED_COUPON);
+        }
+
+        UserCoupon userCoupon = UserCoupon.from(user, coupon);
+
+        // 쿠폰 수량 차감 후 저장
+        coupon.use();               // 수량 남아있는 지 확인 후 차감
+        log.info("NOW COUPON COUNT: " + coupon.getCount());
+        couponRepository.save(coupon);
+        userCouponRepository.save(userCoupon);
+    }
+
+
     public void issueCouponWithNamedLockAndJdbc(User user, Long couponId) {
         String key = "coupon:" + couponId;
 
@@ -99,12 +123,11 @@ public class UserCouponService {
         );
     }
 
-    @Transactional
     public void issueCouponWithNamedLockAndDS(User user, Long couponId) {
         String key = "coupon:" + couponId;
 
-        nameLockWithJdbcTemplate.executeWithLock(
-            key, 5, () -> {
+        nameLockWithDataSource.executeWithLock(
+            key, 3, () -> {
                 issueCoupon(user, couponId);
                 return null;
             }

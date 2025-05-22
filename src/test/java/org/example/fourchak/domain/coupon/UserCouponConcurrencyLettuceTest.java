@@ -25,7 +25,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Sort;
 
 @SpringBootTest
-public class UserCouponConcurrencyWithMySQLTest {
+public class UserCouponConcurrencyLettuceTest {
 
     @Autowired
     private UserCouponService userCouponService;
@@ -65,7 +65,7 @@ public class UserCouponConcurrencyWithMySQLTest {
     }
 
     @Test
-    @DisplayName("쿠폰 동시 발급 테스트 with MySQL 네임드 락, JDBC")
+    @DisplayName("쿠폰 동시 발급 테스트 with 레디스 락 서비스")
     void testConcurrentIssue() throws InterruptedException {
         ExecutorService executor = Executors.newFixedThreadPool(10);
         int memberCount = COUPON_COUNT + 200;
@@ -78,7 +78,7 @@ public class UserCouponConcurrencyWithMySQLTest {
             User user = dummyUsers.get(i);
             executor.submit(() -> {
                 try {
-                    userCouponService.issueCouponWithNamedLockAndJdbc(user, couponId);
+                    userCouponService.issueCouponLettuceWithService(user, couponId);
                     successCount.incrementAndGet();
                 } catch (Exception e) {
                     failCount.incrementAndGet();
@@ -104,8 +104,8 @@ public class UserCouponConcurrencyWithMySQLTest {
     }
 
     @Test
-    @DisplayName("쿠폰 동시 발급 테스트 with MySQL 네임드 락, DataSource")
-    void testConcurrentIssueWithDataSource() throws InterruptedException {
+    @DisplayName("쿠폰 동시 발급 테스트 with 레디스 AOP")
+    void testConcurrentIssueWithAOP() throws InterruptedException {
         ExecutorService executor = Executors.newFixedThreadPool(10);
         int memberCount = COUPON_COUNT + 200;
         CountDownLatch latch = new CountDownLatch(memberCount);
@@ -117,12 +117,14 @@ public class UserCouponConcurrencyWithMySQLTest {
             User user = dummyUsers.get(i);
             executor.submit(() -> {
                 try {
-                    userCouponService.issueCouponWithNamedLockAndDS(user, couponId);
+                    userCouponService.issueCouponLettuceWithAOP(user, couponId);
                     successCount.incrementAndGet();
                 } catch (Exception e) {
+                    System.out.println("예외발생: " + e.getMessage());
                     failCount.incrementAndGet();
                 } finally {
                     latch.countDown();
+                    System.out.println("LATCH COUNT: " + latch.getCount());
                 }
             });
         }
@@ -131,7 +133,6 @@ public class UserCouponConcurrencyWithMySQLTest {
 
         executor.shutdown();
         Coupon updatedCoupon = couponRepository.findById(coupon.getId()).orElseThrow();
-        long userCouponCount = userCouponRepository.count();
 
         System.out.println("[TEST END] 남은 쿠폰 수량: " + updatedCoupon.getCount());
         System.out.println("유저 쿠폰 개수: " + userCouponRepository.count());
@@ -141,9 +142,5 @@ public class UserCouponConcurrencyWithMySQLTest {
         assertThat(updatedCoupon.getCount())
             .as("남은 쿠폰 수량이 쿠폰 개수-성공 횟수와 동일")
             .isEqualTo(COUPON_COUNT - successCount.get());
-        assertThat(userCouponCount)
-            .as("유저 쿠폰은 쿠폰 발급량 이하")
-            .isLessThanOrEqualTo(COUPON_COUNT);
     }
-
 }

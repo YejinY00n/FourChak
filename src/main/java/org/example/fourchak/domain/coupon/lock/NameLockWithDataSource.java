@@ -9,33 +9,34 @@ import javax.sql.DataSource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.support.TransactionSynchronizationAdapter;
-import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class NameLockWithDataSource {
 
-    private static final String GET_LOCK = "SELECT GET_LOCK(:userLockName, :timeoutSeconds)";
-    private static final String RELEASE_LOCK = "SELECT RELEASE_LOCK(:userLockName)";
+    private static final String GET_LOCK = "SELECT GET_LOCK(?, ?)";
+    private static final String RELEASE_LOCK = "SELECT RELEASE_LOCK(?)";
 
     private final DataSource dataSource;
 
     public <T> T executeWithLock(String userLockName, int timeoutSeconds, Supplier<T> supplier) {
         try (Connection connection = dataSource.getConnection()) {
             try {
+                log.info("LOCK 획득 시작 KEY: " + userLockName + " __ CONNECTION: " + connection);
                 getLock(connection, userLockName, timeoutSeconds);
+                log.info("LOCK 획득 성공 KEY: " + userLockName + " __ CONNECTION: " + connection);
                 return supplier.get();
             } finally {
-                TransactionSynchronizationManager.registerSynchronization(
-                    new TransactionSynchronizationAdapter() {
-                        @Override
-                        public void afterCommit() {
-                            releaseLock(connection, userLockName);
-                        }
-                    });
-                // releaseLock(connection, userLockName);
+//                TransactionSynchronizationManager.registerSynchronization(
+//                    new TransactionSynchronizationAdapter() {
+//                        @Override
+//                        public void afterCommit() {
+//                            releaseLock(connection, userLockName);
+//                        }
+//                    });
+                releaseLock(connection, userLockName);
+                log.info("LOCK 해제 성공 KEY: " + userLockName + " __ CONNECTION: " + connection);
             }
         } catch (SQLException | RuntimeException e) {
             throw new RuntimeException(e.getMessage(), e);
@@ -67,15 +68,18 @@ public class NameLockWithDataSource {
         throws SQLException {
         try (ResultSet resultSet = ps.executeQuery()) {
             if (!resultSet.next()) {
-                log.error("USER LEVEL LOCK 쿼리 결과 값이 없습니다. type = [], userLockName ], connection=[]",
-                    new Object[]{type, userLockName, ps.getConnection()});
+                log.error(
+                    "USER LEVEL LOCK 쿼리 결과 값이 없습니다. type = " + type
+                        + "_ userLockName = " + userLockName
+                        + " _ connection: " + ps.getConnection());
                 throw new RuntimeException("USER LEVEL LOCK 쿼리 결과 값이 없습니다.");
             }
             int result = resultSet.getInt(1);
             if (result != 1) {
                 log.error(
-                    "USER LEVEL LOCK 쿼리 결과 값이 1이 아닙니다. type = [], result ] userLockName ], connection=[]",
-                    new Object[]{type, result, userLockName, ps.getConnection()});
+                    "USER LEVEL LOCK 쿼리 결과 값이 1이 아닙니다. type = " + type
+                        + " _ result = " + result + "_ userLockName = " + userLockName
+                        + " _ connection: " + ps.getConnection());
                 throw new RuntimeException("USER LEVEL LOCK 쿼리 결과 값이 1이 아닙니다.");
             }
         }

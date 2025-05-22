@@ -1,4 +1,4 @@
-package org.example.fourchak.domain.coupon.redis;
+package org.example.fourchak.domain.coupon.lock;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

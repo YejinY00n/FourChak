@@ -1,4 +1,4 @@
-package org.example.fourchak.domain.coupon.redis;
+package org.example.fourchak.domain.coupon.lock;
 
 import java.time.Duration;
 import lombok.RequiredArgsConstructor;

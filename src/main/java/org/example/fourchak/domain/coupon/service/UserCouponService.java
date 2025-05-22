@@ -10,7 +10,8 @@ import org.example.fourchak.common.error.ExceptionCode;
 import org.example.fourchak.domain.coupon.dto.response.UserCouponResponse;
 import org.example.fourchak.domain.coupon.entity.Coupon;
 import org.example.fourchak.domain.coupon.entity.UserCoupon;
-import org.example.fourchak.domain.coupon.redis.LockService;
+import org.example.fourchak.domain.coupon.lock.LockService;
+import org.example.fourchak.domain.coupon.lock.NameLockWithJdbcTemplate;
 import org.example.fourchak.domain.coupon.repository.CouponRepository;
 import org.example.fourchak.domain.coupon.repository.UserCouponRepository;
 import org.example.fourchak.domain.user.entity.User;
@@ -27,6 +28,7 @@ public class UserCouponService {
     private final UserCouponRepository userCouponRepository;
     private final CouponRepository couponRepository;
     private final LockService lockService;
+    private final NameLockWithJdbcTemplate nameLockWithJdbcTemplate;
 
     @Lazy
     @Autowired
@@ -34,6 +36,7 @@ public class UserCouponService {
 
     @Transactional
     public void issueCoupon(User user, Long couponId) {
+        log.info("ISSUE COUPON CALLED");
         // 존재하는 쿠폰인지 확인
         Coupon coupon = couponRepository.findById(couponId)
             .orElseThrow(() -> new BaseException(ExceptionCode.NOT_FOUND_COUPON));
@@ -47,6 +50,8 @@ public class UserCouponService {
 
         // 쿠폰 수량 차감 후 저장
         coupon.use();               // 수량 남아있는 지 확인 후 차감
+        log.info("NOW COUPON COUNT: " + coupon.getCount());
+        couponRepository.save(coupon);
         userCouponRepository.save(userCoupon);
     }
 
@@ -81,6 +86,31 @@ public class UserCouponService {
         couponRepository.save(coupon);
         userCouponRepository.save(userCoupon);
     }
+
+    @Transactional
+    public void issueCouponWithNamedLockAndJdbc(User user, Long couponId) {
+        String key = "coupon:" + couponId;
+
+        nameLockWithJdbcTemplate.executeWithLock(
+            key, 5, () -> {
+                issueCoupon(user, couponId);
+                return null;
+            }
+        );
+    }
+
+    @Transactional
+    public void issueCouponWithNamedLockAndDS(User user, Long couponId) {
+        String key = "coupon:" + couponId;
+
+        nameLockWithJdbcTemplate.executeWithLock(
+            key, 5, () -> {
+                issueCoupon(user, couponId);
+                return null;
+            }
+        );
+    }
+
 
     public List<UserCouponResponse> findUserCoupons(Long userId) {
         return userCouponRepository.findAllByUserId(userId).stream()

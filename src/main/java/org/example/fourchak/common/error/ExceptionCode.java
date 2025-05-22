@@ -18,6 +18,7 @@ public enum ExceptionCode implements ErrorCode {
     VALID_ERROR(HttpStatus.BAD_REQUEST, "Validation 이 유효하지 않습니다"),
     MISMATCH_COUPON_STORE(HttpStatus.BAD_REQUEST, "해당 가게의 쿠폰이 아닙니다"),
     ALREADY_USED_COUPON(HttpStatus.BAD_REQUEST, "이미 사용된 쿠폰입니다"),
+    LOCK_EXCEPTION(HttpStatus.BAD_REQUEST, "요청 시간이 초과되었습니다."),
 
     // 401 Unauthorized = 인증이 안될 때
     INVALID_JWT_SIGNATURE(HttpStatus.UNAUTHORIZED, "유효하지 않는 JWT 서명입니다."),

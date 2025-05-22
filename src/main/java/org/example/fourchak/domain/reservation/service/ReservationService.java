@@ -2,7 +2,9 @@ package org.example.fourchak.domain.reservation.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.example.fourchak.common.annotation.LettuceLock;
 import org.example.fourchak.common.error.CustomRuntimeException;
 import org.example.fourchak.common.error.ExceptionCode;
 import org.example.fourchak.config.security.CustomUserPrincipal;
@@ -12,13 +14,14 @@ import org.example.fourchak.domain.reservation.dto.event.DeleteReservationEvent;
 import org.example.fourchak.domain.reservation.dto.requset.ReservationRequestDto;
 import org.example.fourchak.domain.reservation.dto.response.ReservationResponseDto;
 import org.example.fourchak.domain.reservation.entity.Reservation;
+import org.example.fourchak.domain.reservation.repository.ReservationRepository;
 import org.example.fourchak.domain.store.entity.Store;
 import org.example.fourchak.domain.store.repository.StoreRepository;
 import org.example.fourchak.domain.user.entity.User;
 import org.example.fourchak.domain.user.repository.UserRepository;
 import org.example.fourchak.domain.waiting.repository.WaitingRepository;
-import org.example.fourchak.reservation.repository.ReservationRepository;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,8 +36,11 @@ public class ReservationService {
     private final UserCouponRepository userCouponRepository;
     private final WaitingRepository waitingRepository;
     private final ApplicationEventPublisher eventPublisher;
+    private final RedisTemplate<String, Object> redisTemplate;
+    private final DistributedLockService distributedLockService;
 
     @Transactional
+    @LettuceLock(key = "'lock:reservation:' + #storeId + ':' + #dto.reservationTime")
     public ReservationResponseDto saveReservation(CustomUserPrincipal customUserDetail,
         ReservationRequestDto dto, Long storeId, Long userCouponId) {
 
@@ -82,6 +88,7 @@ public class ReservationService {
         return ReservationResponseDto.from(reservation);
     }
 
+
     public List<ReservationResponseDto> findByStoreId(Long id) {
         return reservationRepository.findByStoreId(id).stream().map(ReservationResponseDto::from)
             .toList();
@@ -101,6 +108,8 @@ public class ReservationService {
     @Transactional
     public void deleteReserve(Long id) {
         Reservation reservation = reservationRepository.findByIdOrElseThrow(id);
+        Optional.ofNullable(reservation.getUserCoupon())
+            .ifPresent(UserCoupon::changeUsed);
         reservationRepository.delete(reservation);
 
         // 대기자가 있는지 확인하고 있으면 예약 삭제 이벤트 발송
@@ -117,6 +126,7 @@ public class ReservationService {
 
     }
 
+    @Transactional(readOnly = true)
     public int countReservationPeopleAtTime(Long storeId, LocalDateTime reservationTime) {
 
         List<Reservation> reservationList = reservationRepository.findByReservationTimeAndStoreId(

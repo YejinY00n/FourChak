@@ -12,9 +12,9 @@ public @interface RedissonLock {
 
     String key();
 
-    long waitTime() default 5000;
+    long waitTime() default 6000;
 
-    long leaseTime() default 3000;
+    long leaseTime() default 6000;
 
     TimeUnit timeUnit() default TimeUnit.MILLISECONDS;
 }

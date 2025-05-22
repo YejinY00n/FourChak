@@ -62,6 +62,8 @@ dependencies {
     // Redis 캐싱을 사용할 경우
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
+    implementation 'org.redisson:redisson-spring-boot-starter:3.23.5'
+
     // test용
     testImplementation platform("org.testcontainers:testcontainers-bom:1.19.3")
     testImplementation "org.testcontainers:testcontainers"

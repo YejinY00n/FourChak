@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import org.example.fourchak.common.annotation.LettuceLock;
+import org.example.fourchak.common.annotation.RedissonLock;
 import org.example.fourchak.common.error.CustomRuntimeException;
 import org.example.fourchak.common.error.ExceptionCode;
 import org.example.fourchak.config.security.CustomUserPrincipal;
@@ -21,9 +21,9 @@ import org.example.fourchak.domain.user.entity.User;
 import org.example.fourchak.domain.user.repository.UserRepository;
 import org.example.fourchak.domain.waiting.repository.WaitingRepository;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -36,11 +36,9 @@ public class ReservationService {
     private final UserCouponRepository userCouponRepository;
     private final WaitingRepository waitingRepository;
     private final ApplicationEventPublisher eventPublisher;
-    private final RedisTemplate<String, Object> redisTemplate;
-    private final DistributedLockService distributedLockService;
 
-    @Transactional
-    @LettuceLock(key = "'lock:reservation:' + #storeId + ':' + #dto.reservationTime")
+    @RedissonLock(key = "'lock:reservation:' + #storeId + ':' + #dto.reservationTime")
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public ReservationResponseDto saveReservation(CustomUserPrincipal customUserDetail,
         ReservationRequestDto dto, Long storeId, Long userCouponId) {
 
@@ -126,7 +124,7 @@ public class ReservationService {
 
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     public int countReservationPeopleAtTime(Long storeId, LocalDateTime reservationTime) {
 
         List<Reservation> reservationList = reservationRepository.findByReservationTimeAndStoreId(

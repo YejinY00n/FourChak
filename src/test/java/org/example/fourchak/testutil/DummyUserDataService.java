@@ -6,11 +6,14 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
+import org.example.fourchak.config.TestSecurityConfig;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+@Import(TestSecurityConfig.class)
 @Service
 @Profile("test")
 @RequiredArgsConstructor

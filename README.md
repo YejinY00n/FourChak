@@ -1,15 +1,15 @@
-# 🍽️ FourChak
+![KakaoTalk_Photo_2025-05-23-11-22-12](https://github.com/user-attachments/assets/49047ed3-160a-480e-816b-012bec560a2d)# 🍽️ FourChak
 ![ChatGPT Image 2025년 5월 20일 오후 01_00_28](https://github.com/user-attachments/assets/d365281a-f0b0-4553-9d68-2bc884982083)
 
 ## 팀원 및 역할
-```
-
-```
+![image](https://github.com/user-attachments/assets/7c8e9803-fd33-4b72-a417-beaa9806a7f0)
 
 ---
 
 ## 프로그램 설명 (FourChak)
 
+FourChak은 4조가 만든 좌석에 착하고 앉는 예약 프로그램으로 FourChak입니다.
+FourChak은 사용자가 원하는 식당을 검색하고 실시간으로 예약 할 수 있도록 도와주는 식당 예약 플랫폼입니다. 실시간 예약 시스템을 통해 빠르고 편리한 외식 예약을 할 수 있게 구현하였습니다.
 
 ---
 
@@ -76,13 +76,29 @@
 ---
 
 ## 기술적 포인트
-#### 1. JWT 기반 로그인 구현
+### 1. JWT 기반 로그인 구현
 
-#### 2. Cache 검색 기능 구현
+### 2. Cache 검색 기능 구현
 
-#### 3. 동시성 제어
+#### Redis 캐시 적용 배경
+- 검색 특성: 동일 키워드 반복 검색 빈번
+- DB 부하: LIKE 쿼리의 높은 비용
+- 사용자 경험: 빠른 검색 응답 필요
 
-#### 4. 인덱싱
+#### 캐시전략
+```
+// 검색 결과 캐싱 (5분 TTL)
+@Cacheable(value = "storeSearch", key = "#keyword + '_' + #pageable.pageNumber + '_' + #pageable.pageSize")
+public Page<StoreResponseDto> searchStoreWithCache(String keyword, Pageable pageable)
+
+// 인기 검색어 캐싱 (30분 TTL)
+@Cacheable(value = "popularKeywords")
+public List<PopularKeywordResponseDto> getPopularKeywords()
+```
+
+### 3. 동시성 제어
+
+### 4. 인덱싱
 
 ---
 
@@ -117,21 +133,24 @@
 ## API 명세서
 
 ### User, Auth
-
+![KakaoTalk_Photo_2025-05-23-11-20-46](https://github.com/user-attachments/assets/f9948de3-6b16-4363-a56c-66bd0d5a556f)
 
 ### Store
-
+![KakaoTalk_Photo_2025-05-23-11-21-09](https://github.com/user-attachments/assets/30e743e3-6cb0-4922-9c40-eb54d9cf6e6e)
 
 ### Reservation
-
+![KakaoTalk_Photo_2025-05-23-11-21-24](https://github.com/user-attachments/assets/d79a71bf-c3a6-4c83-bd8e-0878c3370db9)
 
 ### Waiting
+![KakaoTalk_Photo_2025-05-23-11-22-22](https://github.com/user-attachments/assets/1fa65bd1-9851-4dbd-90f2-b4ab937aebb0)
 
 
 ### Coupon
+![KakaoTalk_Photo_2025-05-23-11-22-12](https://github.com/user-attachments/assets/5f24ea79-7377-42c3-b28a-6e31b1803ed2)
 
 
 ### SearchKeyword
+![KakaoTalk_Photo_2025-05-23-11-22-39](https://github.com/user-attachments/assets/23f04b07-6e83-4131-844d-a7d84671779c)
 
 
 ---
@@ -288,5 +307,62 @@ REFERENCES `user` (
 ---
 
 ## 패키지 구조
+![image](https://github.com/user-attachments/assets/d3c7ba9b-c6c0-451d-9076-f7f81a76af42)
+
+---
+
+## 검색 API 캐시 적용
+
+### 문제 상황
+
+- 실시간 검색의 특성: 사용자들이 같은 키워드로 반복 검색 (예: "치킨", "피자")
+- DB 부하 증가: 매번 LIKE 쿼리로 전체 테이블 스캔
+- 응답 지연: 복잡한 검색 쿼리로 인한 성능 저하
+- 동시 요청: 많은 사용자가 동일한 인기 검색어로 동시 검색
+
+### 캐시 적용 이유
+
+#### 1. 검색 결과 캐싱 (storeSearch)
+```
+@Cacheable(value = "storeSearch", key = "#keyword + '_' + #pageable.pageNumber + '_' + #pageable.pageSize")
+```
+- 반복 검색 최적화: "치킨" 검색 시 5분간 DB 조회 없이 즉시 응답
+- 페이지네이션 고려: 키워드 + 페이지 정보로 세밀한 캐시 키 설정
+- DB 부하 감소: LIKE 쿼리 실행 횟수 대폭 감소
+
+#### 2. 인기 검색어 캐싱(popularKeywords)
+```
+@Cacheable(value = "popularKeywords")
+```
+- 자주 조회되는 데이터: 인기 검색어는 모든 사용자가 확인하는 공통 데이터
+- 집계 쿼리 최적화: COUNT 기반 정렬 쿼리는 비용이 높음
+- 실시간성 vs 성능: 30분 주기 업데이트로 충분한 실시간성 확보
+
+#### 3. API 버전 분리
+
+- v1 API: 캐시 미적용 (비교 및 테스트용)
+- v2 API: 캐시 적용 (실제 서비스용)
+
+### 성능 비교 분석
+![](https://velog.velcdn.com/images/todok0317/post/5c621b66-a4d1-4870-a5ee-f08c1ae028c6/image.png)
+![](https://velog.velcdn.com/images/todok0317/post/ef8fa490-1d79-4e1e-9efb-e2310cff9b6f/image.png)
+
+- v1 검색 (캐시 미사용)
+응답 시간: 107ms
+데이터 크기: 2.14 KB
+결과: 가게 ID 46, 가게명 "고향떡볶이집 7호점"
+
+- v2 검색 (캐시 사용)
+응답 시간: 75ms
+데이터 크기: 2.15 KB
+결과: 가게 ID 16, 가게명 "지인떡볶이집 13호점"
+
+#### 성능 향상 결과
+캐시를 사용한 v2가 약 30% 더 빠른 성능을 보여주고 있습니다:
+- 시간 단축: 107ms → 75ms (32ms 감소)
+- 성능 향상률: 약 29.9%
+
+
+
 
 

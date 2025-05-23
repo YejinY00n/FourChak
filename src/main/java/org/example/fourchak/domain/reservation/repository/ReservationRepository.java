@@ -1,4 +1,4 @@
-package org.example.fourchak.reservation.repository;
+package org.example.fourchak.domain.reservation.repository;
 
 import java.time.LocalDateTime;
 import java.util.List;

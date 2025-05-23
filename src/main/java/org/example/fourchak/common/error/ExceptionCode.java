@@ -16,8 +16,11 @@ public enum ExceptionCode implements ErrorCode {
     ALREADY_DELETED_USER(HttpStatus.BAD_REQUEST, "이미 탈퇴한 회원입니다."),
     DUPLICATE_PASSWORD_CHANGE(HttpStatus.BAD_REQUEST, "동일한 비밀번호로는 변경할 수 없습니다."),
     VALID_ERROR(HttpStatus.BAD_REQUEST, "Validation 이 유효하지 않습니다"),
+    HAS_ISSUED_COUPON(HttpStatus.BAD_REQUEST, "이미 발급받은 쿠폰입니다."),
     MISMATCH_COUPON_STORE(HttpStatus.BAD_REQUEST, "해당 가게의 쿠폰이 아닙니다"),
     ALREADY_USED_COUPON(HttpStatus.BAD_REQUEST, "이미 사용된 쿠폰입니다"),
+    LOCK_EXCEPTION(HttpStatus.BAD_REQUEST, "요청 시간이 초과되었습니다."),
+
 
     // 401 Unauthorized = 인증이 안될 때
     INVALID_JWT_SIGNATURE(HttpStatus.UNAUTHORIZED, "유효하지 않는 JWT 서명입니다."),
@@ -45,7 +48,8 @@ public enum ExceptionCode implements ErrorCode {
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 내부 오류 혹은 예기치 못한 예외가 발생했습니다."),
 
     ACCESS_DENIED_ERROR(HttpStatus.FORBIDDEN, "권한이 없습니다."),
-    NO_SEAT_AVAILABLE(HttpStatus.BAD_REQUEST, "남아있는 좌석수가 부족합니다.");
+    NO_SEAT_AVAILABLE(HttpStatus.BAD_REQUEST, "남아있는 좌석수가 부족합니다."),
+    SOLD_OUT_COUPON(HttpStatus.BAD_REQUEST, "수량 매진된 쿠폰입니다.");
 
     private final HttpStatus httpStatus;
     private final String message;

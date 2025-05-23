@@ -19,7 +19,7 @@ public class UserCouponController {
 
     private final UserCouponService userCouponService;
 
-    // TODO: 추후 PreAuthorized 추가
+    // 쿠폰 발급
     @PostMapping("/coupons/{couponId}/issue")
     ResponseEntity<ResponseMessage<CouponResponseDto>> issueUserCoupon(
         @AuthenticationPrincipal CustomUserPrincipal userPrincipal, @PathVariable Long couponId) {

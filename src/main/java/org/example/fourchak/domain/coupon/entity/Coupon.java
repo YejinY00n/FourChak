@@ -60,4 +60,8 @@ public class Coupon {
     public boolean isExists() {
         return this.count > 0;
     }
+
+    public void cancelIssuedCoupon() {
+        this.count += 1;
+    }
 }

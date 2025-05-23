@@ -76,12 +76,4 @@ public class CouponService {
                 () -> new BaseException(ExceptionCode.NOT_FOUND_STORE))
             .getUser().getId().equals(userId);
     }
-
-    // 쿠폰 사용
-    @Transactional
-    public void useCoupon(Long couponId) {
-        Coupon coupon = couponRepository.findById(couponId)
-            .orElseThrow(() -> new BaseException(ExceptionCode.NOT_FOUND_COUPON));
-        coupon.use();
-    }
 }

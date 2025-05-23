@@ -147,16 +147,23 @@ public class UserCouponService {
             .toList();
     }
 
+    @Transactional
     public void deleteCoupon(Long userId, Long userCouponId) {
         UserCoupon userCoupon = userCouponRepository.findById(userCouponId)
             .orElseThrow(() -> new BaseException(ExceptionCode.NOT_FOUND_USERCOUPON));
+        // 존재하는 쿠폰인지 확인
+        Coupon coupon = userCoupon.getCoupon();
 
         // 사용자 소유인지 확인
         if (!hasCoupon(userId, userCouponId)) {
             throw new BaseException(ExceptionCode.UNAUTHORIZED_USERCOUPON_ACCESS);
         }
-
+        // 유저 쿠폰 삭제
         userCouponRepository.delete(userCoupon);
+
+        // 쿠폰 수량 다시 증가
+        coupon.cancelIssuedCoupon();
+        couponRepository.save(coupon);
     }
 
     private boolean hasCoupon(Long userId, Long userCouponId) {

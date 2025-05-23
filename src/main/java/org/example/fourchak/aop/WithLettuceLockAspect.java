@@ -11,7 +11,7 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.example.fourchak.common.annotation.LockKey;
 import org.example.fourchak.common.error.BaseException;
 import org.example.fourchak.common.error.ExceptionCode;
-import org.example.fourchak.domain.coupon.lock.RedisLockRepository;
+import org.example.fourchak.domain.coupon.lock.redis.RedisLockRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.support.TransactionSynchronizationAdapter;
 import org.springframework.transaction.support.TransactionSynchronizationManager;

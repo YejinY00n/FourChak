@@ -1,4 +1,4 @@
-![KakaoTalk_Photo_2025-05-23-11-22-12](https://github.com/user-attachments/assets/49047ed3-160a-480e-816b-012bec560a2d)# 🍽️ FourChak
+# 🍽️ FourChak
 ![ChatGPT Image 2025년 5월 20일 오후 01_00_28](https://github.com/user-attachments/assets/d365281a-f0b0-4553-9d68-2bc884982083)
 
 ## 팀원 및 역할
@@ -77,6 +77,11 @@ FourChak은 사용자가 원하는 식당을 검색하고 실시간으로 예약
 
 ## 기술적 포인트
 ### 1. JWT 기반 로그인 구현
+- Spring Security와 JWT(Json Web Token)를 활용한 인증 시스템 구현
+
+- Stateless한 구조로 세션 서버 부담 없이 사용자 인증 처리
+
+- 사용자 로그인 시 JWT 발급, 이후 모든 요청에 헤더를 통해 인증 처리
 
 ### 2. Cache 검색 기능 구현
 
@@ -98,7 +103,27 @@ public List<PopularKeywordResponseDto> getPopularKeywords()
 
 ### 3. 동시성 제어
 
+#### 문제 상황
+- 예약 요청이 동시에 집중될 경우 데이터 정합성 유지 필요
+- 예: 동일 시간대에 같은 테이블에 대한 중복 예약 시도
+
+#### 해결 방법
+- Redisson 분산 락 적용
+	- Redisson을 사용하여 락 획득/해제의 원자성 보장
+	- Lettuce보다 코드 간결하고 안정적인 락 처리 가능
+- 트랜잭션보다 락이 먼저 해제되는 문제 예방
+	- 트랜잭션 격리 수준을 READ_COMMITTED로 설정하여 데이터 정합성 강화
+
+
 ### 4. 인덱싱
+
+#### 개념 요약
+- 인덱스는 DB에서 데이터를 더 빠르게 조회할 수 있도록 돕는 저장 방식
+- MySQL에서는 기본적으로 B+Tree 인덱스 사용
+
+#### 적용방식
+- Entity 내에서 @Id 또는 @Column(unique = true) 어노테이션 활용
+- 자주 검색되거나 정렬에 사용되는 컬럼에 인덱스를 적용하여 쿼리 성능 개선
 
 ---
 

@@ -1,4 +1,4 @@
-![KakaoTalk_Photo_2025-05-23-11-22-12](https://github.com/user-attachments/assets/49047ed3-160a-480e-816b-012bec560a2d)# 🍽️ FourChak
+# 🍽️ FourChak
 ![ChatGPT Image 2025년 5월 20일 오후 01_00_28](https://github.com/user-attachments/assets/d365281a-f0b0-4553-9d68-2bc884982083)
 
 ## 팀원 및 역할

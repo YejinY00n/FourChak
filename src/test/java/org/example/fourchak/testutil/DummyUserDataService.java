@@ -23,7 +23,7 @@ public class DummyUserDataService {
     private final Random random = new Random();
 
     public void insertDummyUsers(int totalCount) {
-        String sql = "INSERT INTO users (email, username, phone, password, user_role,is_deleted) VALUES (?, ?, ?, ?, ?,?)";
+        String sql = "INSERT INTO users (email, username, phone, password, user_role, is_deleted) VALUES (?, ?, ?, ?, ?,?)";
 
         List<Object[]> batchArgs = new ArrayList<>();
         Set<String> usedEmails = new HashSet<>();
@@ -56,7 +56,7 @@ public class DummyUserDataService {
             System.out.println("Inserted remaining users.");
         }
 
-        System.out.println("10만 개 유저 더미 데이터 삽입 완료!");
+        System.out.println("1만 개 유저 더미 데이터 삽입 완료!");
     }
 
     private boolean emailExists(String email) {

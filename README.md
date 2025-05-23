@@ -13,6 +13,22 @@ FourChak은 사용자가 원하는 식당을 검색하고 실시간으로 예약
 
 ---
 
+## 정리 파일
+- 트러블 슈팅 :
+	https://rudtjs2.tistory.com/50,
+	https://velog.io/@soonch6/최적화Indexing,
+	https://velog.io/@todok0317/Redis-캐시-도입기-검색-속도-개선을-위한-성능-최적화-트러블슈팅,
+	https://velog.io/@todok0317/Jenkins-기반-CICD-구축-시도-및-트러블슈팅,
+	최종본 : https://velog.io/@todok0317/FourChak-프로젝트-통합-트러블슈팅2
+
+- 정리한 블로그 글 : 
+https://velog.io/@todok0317/Spring-Boot-FourChak-프로젝트-정리본
+
+- 시연 동영상 URL
+
+  
+---
+
 ## 주요 구현 기능
 ### 1. 회원가입/로그인
 
@@ -124,6 +140,18 @@ public List<PopularKeywordResponseDto> getPopularKeywords()
 #### 적용방식
 - Entity 내에서 @Id 또는 @Column(unique = true) 어노테이션 활용
 - 자주 검색되거나 정렬에 사용되는 컬럼에 인덱스를 적용하여 쿼리 성능 개선
+
+### 5. CI/CD
+#### 목적
+- 코드 변경 시 자동으로 빌드 및 배포되도록 하여 개발 효율성과 배포 안정성 향상
+- 수동 배포로 인한 실수 및 반복 작업 최소화
+
+#### Jenkins 기반 CI/CD 파이프라인 구축
+- Jenkins가 프로젝트 변경 된 사항을 감지하여 ./gradlew build를 통해 .jar 파일 생성 (자동 빌드화)
+#### 서버 배포 (CD) -> 할 예정
+- 빌드된 .jar 파일을 AWS EC2 서버에 전송 (scp)
+- 기존 애플리케이션 종료 후 새 버전 실행 (pkill, nohup java -jar)
+- 필요한 경우 Nginx 또는 도메인 설정 연동
 
 ---
 

@@ -1,14 +1,17 @@
 package org.example.fourchak.domain.user.repository;
 
 import java.util.Optional;
+import org.example.fourchak.config.TestSecurityConfig;
 import org.example.fourchak.domain.user.entity.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 
+@Import(TestSecurityConfig.class)
 @ActiveProfiles("test")
 @SpringBootTest
 public class UserRepositoryIndexTest {

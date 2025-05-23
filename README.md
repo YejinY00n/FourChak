@@ -13,6 +13,22 @@ FourChak은 사용자가 원하는 식당을 검색하고 실시간으로 예약
 
 ---
 
+## 정리 파일
+- 트러블 슈팅
+https://rudtjs2.tistory.com/50
+https://velog.io/@soonch6/최적화Indexing
+https://velog.io/@todok0317/Redis-캐시-도입기-검색-속도-개선을-위한-성능-최적화-트러블슈팅
+https://velog.io/@todok0317/Jenkins-기반-CICD-구축-시도-및-트러블슈팅
+최종본 : https://velog.io/@todok0317/FourChak-프로젝트-통합-트러블슈팅2
+
+- 정리한 블로그 글
+https://velog.io/@todok0317/Spring-Boot-FourChak-프로젝트-정리본
+
+- 시연 동영상 URL
+
+  
+---
+
 ## 주요 구현 기능
 ### 1. 회원가입/로그인
 

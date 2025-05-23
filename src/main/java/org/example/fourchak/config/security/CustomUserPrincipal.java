@@ -1,5 +1,6 @@
 package org.example.fourchak.config.security;
 
+import java.security.Principal;
 import java.util.Collection;
 import java.util.List;
 import lombok.Getter;
@@ -11,7 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 @Getter
 @RequiredArgsConstructor
-public class CustomUserPrincipal implements UserDetails {
+public class CustomUserPrincipal implements UserDetails, Principal {
 
     private final User user;
 
@@ -52,5 +53,10 @@ public class CustomUserPrincipal implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    @Override
+    public String getName() {
+        return "";
     }
 }

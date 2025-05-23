@@ -21,7 +21,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UserInfoResponse getUserInfoByToken(String email, UserPasswordRequest passwordRequest) {
+    public UserInfoResponse getUserInfo(String email, UserPasswordRequest passwordRequest) {
 
         User userInfo = findInfoAndCheckPassword(email, passwordRequest.getPassword());
 
@@ -89,5 +89,6 @@ public class UserService {
 
         return userInfo;
     }
+
 
 }

@@ -19,6 +19,7 @@ FourChak은 사용자가 원하는 식당을 검색하고 실시간으로 예약
 	https://velog.io/@soonch6/최적화Indexing,
 	https://velog.io/@todok0317/Redis-캐시-도입기-검색-속도-개선을-위한-성능-최적화-트러블슈팅,
 	https://velog.io/@todok0317/Jenkins-기반-CICD-구축-시도-및-트러블슈팅,
+	https://velog.io/@yoon17710/MySQL-기반-분산락-구현-트러블슈팅-요약,
 	최종본 : https://velog.io/@todok0317/FourChak-프로젝트-통합-트러블슈팅2
 
 - 정리한 블로그 글 : 

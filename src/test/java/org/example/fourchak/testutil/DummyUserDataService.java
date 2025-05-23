@@ -75,9 +75,4 @@ public class DummyUserDataService {
 
         return sb.toString();
     }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 }

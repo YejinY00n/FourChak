@@ -125,6 +125,18 @@ public List<PopularKeywordResponseDto> getPopularKeywords()
 - Entity 내에서 @Id 또는 @Column(unique = true) 어노테이션 활용
 - 자주 검색되거나 정렬에 사용되는 컬럼에 인덱스를 적용하여 쿼리 성능 개선
 
+### 5. CI/CD
+#### 목적
+- 코드 변경 시 자동으로 빌드 및 배포되도록 하여 개발 효율성과 배포 안정성 향상
+- 수동 배포로 인한 실수 및 반복 작업 최소화
+
+#### Jenkins 기반 CI/CD 파이프라인 구축
+- Jenkins가 프로젝트 변경 된 사항을 감지하여 ./gradlew build를 통해 .jar 파일 생성 (자동 빌드화)
+#### 서버 배포 (CD) -> 할 예정
+- 빌드된 .jar 파일을 AWS EC2 서버에 전송 (scp)
+- 기존 애플리케이션 종료 후 새 버전 실행 (pkill, nohup java -jar)
+- 필요한 경우 Nginx 또는 도메인 설정 연동
+
 ---
 
 ## 기술 스택

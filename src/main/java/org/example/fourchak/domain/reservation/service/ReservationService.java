@@ -109,7 +109,6 @@ public class ReservationService {
         Optional.ofNullable(reservation.getUserCoupon())
             .ifPresent(UserCoupon::changeUsed);
         reservationRepository.delete(reservation);
-
         // 대기자가 있는지 확인하고 있으면 예약 삭제 이벤트 발송
         if (waitingRepository.existsByStoreIdAndReservationTime(reservation.getStore().getId(),
             reservation.getReservationTime())) {
@@ -126,12 +125,7 @@ public class ReservationService {
 
     @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     public int countReservationPeopleAtTime(Long storeId, LocalDateTime reservationTime) {
-
-        List<Reservation> reservationList = reservationRepository.findByReservationTimeAndStoreId(
-            reservationTime, storeId);
-        return reservationList.stream().mapToInt(Reservation::getPeopleNumber)
-            .sum();
-
+        return reservationRepository.countBystoreIdAndReservationTime(storeId, reservationTime);
     }
 
     /*

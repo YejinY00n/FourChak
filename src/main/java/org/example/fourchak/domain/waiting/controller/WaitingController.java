@@ -49,7 +49,7 @@ public class WaitingController {
     public ResponseEntity<ResponseMessage<List<GetMyWaitingResponse>>> getMyWaiting(
         @AuthenticationPrincipal CustomUserPrincipal user) {
 
-        List<GetMyWaitingResponse> response = waitingService.getMyWaiting(user.getId());
+        List<GetMyWaitingResponse> response = waitingService.getMyWaiting(user);
 
         ResponseMessage<List<GetMyWaitingResponse>> responseMessage = ResponseMessage.<List<GetMyWaitingResponse>>builder()
             .statusCode(HttpStatus.CREATED.value())

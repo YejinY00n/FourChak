@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.fourchak.config.security.CustomUserPrincipal;
 import org.example.fourchak.domain.reservation.dto.event.DeleteReservationEvent;
 import org.example.fourchak.domain.store.entity.Store;
 import org.example.fourchak.domain.store.repository.StoreRepository;
@@ -71,8 +72,8 @@ public class WaitingService {
     /*
     현재 유저의 활성화 되어있는 예약 대기 목록 조회
      */
-    public List<GetMyWaitingResponse> getMyWaiting(Long userId) {
-        List<Waiting> myWaits = waitingRepository.findByUserId(userId);
+    public List<GetMyWaitingResponse> getMyWaiting(CustomUserPrincipal principal) {
+        List<Waiting> myWaits = waitingRepository.findByUserId(principal.getId());
 
         //Entity -> DTO 변환
         return myWaits.stream()
@@ -104,9 +105,13 @@ public class WaitingService {
             }
             index++;
         }
-        Waiting nextTeam = waitingList.get(index);
 
-        waitingRepository.delete(nextTeam);
+        Waiting nextTeam;
+
+        if (index < waitingList.size()) {
+            nextTeam = waitingList.get(index);
+            waitingRepository.delete(nextTeam);
+        }
     }
 
     @Transactional

@@ -105,13 +105,9 @@ public class WaitingService {
             }
             index++;
         }
+        Waiting nextTeam = waitingList.get(index);
 
-        Waiting nextTeam;
-
-        if (index < waitingList.size()) {
-            nextTeam = waitingList.get(index);
-            waitingRepository.delete(nextTeam);
-        }
+        waitingRepository.delete(nextTeam);
     }
 
     @Transactional

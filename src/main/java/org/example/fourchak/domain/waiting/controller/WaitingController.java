@@ -60,7 +60,7 @@ public class WaitingController {
     }
 
     @DeleteMapping("/waiting/{waitingId}")
-    public ResponseEntity<String> delete(Long waitingId) {
+    public ResponseEntity<String> delete(@PathVariable Long waitingId) {
         waitingService.delete(waitingId);
         return ResponseEntity.ok("대기 취소가 완료되었습니다.");
     }

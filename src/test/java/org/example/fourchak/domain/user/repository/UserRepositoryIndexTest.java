@@ -19,13 +19,14 @@ public class UserRepositoryIndexTest {
     @Autowired
     private UserRepository userRepository;
 
-    private final String testEmail = "emailnY8HtX"; //9998 번째
-    private final Long testId = 9998L;
+    private String testEmail = "email2jMqeh"; //9998 번째
+    private Long testId = 9998L;
 
     private final int REPEAT_COUNT = 100;
 
     @BeforeEach
     void checkDummyData() {
+        testEmail = userRepository.findById(testId).get().getEmail();
         Optional<User> byEmail = userRepository.findByEmail(testEmail);
         Optional<User> byId = userRepository.findById(testId);
 
@@ -57,6 +58,8 @@ public class UserRepositoryIndexTest {
         }
 
         long end = System.currentTimeMillis();
-        System.out.println("ID 조회 평균 시간: " + (end - start) / (double) REPEAT_COUNT + " ms");
+        long idTime = end - start;
+
+        System.out.println("ID 조회 평균 시간: " + idTime / (double) REPEAT_COUNT + " ms");
     }
 }

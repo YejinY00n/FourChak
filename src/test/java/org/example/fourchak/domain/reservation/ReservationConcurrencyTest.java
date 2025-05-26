@@ -21,7 +21,6 @@ import org.example.fourchak.domain.store.entity.Store;
 import org.example.fourchak.domain.store.repository.StoreRepository;
 import org.example.fourchak.domain.user.entity.User;
 import org.example.fourchak.domain.user.repository.UserRepository;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,49 +28,43 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.containers.GenericContainer;
-import org.testcontainers.containers.MySQLContainer;
-import org.testcontainers.junit.jupiter.Container;
 
-@ActiveProfiles("test")
+//@ActiveProfiles("test")
 @Import(RedisCacheConfig.class)
 @SpringBootTest
 public class ReservationConcurrencyTest {
 
-    // MySQL 컨테이너 설정
-    @Container
-    static MySQLContainer<?> mysql = new MySQLContainer<>("mysql:8.0")
-        .withDatabaseName("FourChak")
-        .withUsername("root")
-        .withPassword("   ");
-
-    // Redis 컨테이너 설정
-    @Container
-    static GenericContainer<?> redis = new GenericContainer<>("redis:6.2")
-        .withExposedPorts(6379);
-
-    @BeforeAll
-    static void startContainers() {
-        mysql.start();  // ✅ 컨테이너를 명시적으로 시작
-        redis.start();
-    }
-
-    // 스프링 설정에 컨테이너 포트 동적으로 바인딩
-    @DynamicPropertySource
-    static void configureProperties(DynamicPropertyRegistry registry) {
-        // MySQL
-        registry.add("spring.datasource.url", mysql::getJdbcUrl);
-        registry.add("spring.datasource.username", mysql::getUsername);
-        registry.add("spring.datasource.password", mysql::getPassword);
-        registry.add("spring.datasource.driver-class-name", mysql::getDriverClassName);
-
-        // Redis
-        registry.add("spring.redis.host", redis::getHost);
-        registry.add("spring.redis.port", () -> redis.getMappedPort(6379));
-    }
+//    // MySQL 컨테이너 설정
+//    @Container
+//    static MySQLContainer<?> mysql = new MySQLContainer<>("mysql:8.0")
+//        .withDatabaseName("FourChak")
+//        .withUsername("root")
+//        .withPassword("mysql");
+//
+//    // Redis 컨테이너 설정
+//    @Container
+//    static GenericContainer<?> redis = new GenericContainer<>("redis:6.2")
+//        .withExposedPorts(6379);
+//
+//    @BeforeAll
+//    static void startContainers() {
+//        mysql.start();  // ✅ 컨테이너를 명시적으로 시작
+//        redis.start();
+//    }
+//
+//    // 스프링 설정에 컨테이너 포트 동적으로 바인딩
+//    @DynamicPropertySource
+//    static void configureProperties(DynamicPropertyRegistry registry) {
+//        // MySQL
+//        registry.add("spring.datasource.url", mysql::getJdbcUrl);
+//        registry.add("spring.datasource.username", mysql::getUsername);
+//        registry.add("spring.datasource.password", mysql::getPassword);
+//        registry.add("spring.datasource.driver-class-name", mysql::getDriverClassName);
+//
+//        // Redis
+//        registry.add("spring.redis.host", redis::getHost);
+//        registry.add("spring.redis.port", () -> redis.getMappedPort(6379));
+//    }
 
     @Autowired
     private ReservationService reservationService;

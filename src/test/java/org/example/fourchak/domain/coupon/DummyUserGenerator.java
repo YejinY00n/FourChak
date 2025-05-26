@@ -46,7 +46,7 @@ public class DummyUserGenerator {
     static int COUPON_COUNT = 1000;
 
     @Test
-    @DisplayName("100만건 더미 테스트 데이터 생성")
+    @DisplayName("1만건 더미 테스트 데이터 생성")
     void dummyUserCreate() {
         userRepository.save(
             new User("eee@email.com", "kim",
@@ -56,7 +56,7 @@ public class DummyUserGenerator {
                 +
                 " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         int BATCH_SIZE = 1000;
-        int TOTAL = COUPON_COUNT * 2;
+        int TOTAL = COUPON_COUNT * 10;
 
         // 더미 유저 생성
         for (int i = 0; i < TOTAL / BATCH_SIZE; i++) {

@@ -1,4 +1,4 @@
-package org.example.fourchak.domain.coupon.lock;
+package org.example.fourchak.domain.coupon.lock.mysql;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,7 +20,8 @@ public class NameLockWithJdbcTemplate {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
-    public <T> T executeWithLock(String userLockName, int timeoutSeconds, Supplier<T> supplier) {
+    public <T> T executeWithLock(
+        String userLockName, int timeoutSeconds, Supplier<T> supplier) {
         try {
             getLock(userLockName, timeoutSeconds);
             return supplier.get();

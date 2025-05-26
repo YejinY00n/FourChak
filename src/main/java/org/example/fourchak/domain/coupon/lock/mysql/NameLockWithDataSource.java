@@ -1,4 +1,4 @@
-package org.example.fourchak.domain.coupon.lock;
+package org.example.fourchak.domain.coupon.lock.mysql;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -28,13 +28,6 @@ public class NameLockWithDataSource {
                 log.info("LOCK 획득 성공 KEY: " + userLockName + " __ CONNECTION: " + connection);
                 return supplier.get();
             } finally {
-//                TransactionSynchronizationManager.registerSynchronization(
-//                    new TransactionSynchronizationAdapter() {
-//                        @Override
-//                        public void afterCommit() {
-//                            releaseLock(connection, userLockName);
-//                        }
-//                    });
                 releaseLock(connection, userLockName);
                 log.info("LOCK 해제 성공 KEY: " + userLockName + " __ CONNECTION: " + connection);
             }

@@ -24,5 +24,5 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     void deleteByReservationTimeBefore(LocalDateTime now);
 
-
+    int countBystoreIdAndReservationTime(Long storeId, LocalDateTime reservationTime);
 }

@@ -3,6 +3,7 @@ package org.example.fourchak.domain.waiting.controller;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.example.fourchak.common.ResponseMessage;
+import org.example.fourchak.config.security.CustomUserPrincipal;
 import org.example.fourchak.domain.waiting.dto.request.RegisterWaitingRequest;
 import org.example.fourchak.domain.waiting.dto.response.GetMyWaitingResponse;
 import org.example.fourchak.domain.waiting.dto.response.RegisterWaitingResponse;
@@ -12,9 +13,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -28,7 +29,7 @@ public class WaitingController {
      */
     @PostMapping("/stores/{storeId}/waiting")
     public ResponseEntity<ResponseMessage<RegisterWaitingResponse>> register(
-        @RequestParam Long storeId,
+        @PathVariable Long storeId,
         @RequestBody RegisterWaitingRequest dto) {
         RegisterWaitingResponse response = waitingService.register(storeId, dto);
 
@@ -46,9 +47,9 @@ public class WaitingController {
      */
     @GetMapping("/me/waiting")
     public ResponseEntity<ResponseMessage<List<GetMyWaitingResponse>>> getMyWaiting(
-        @AuthenticationPrincipal Long userId) {
+        @AuthenticationPrincipal CustomUserPrincipal user) {
 
-        List<GetMyWaitingResponse> response = waitingService.getMyWaiting(userId);
+        List<GetMyWaitingResponse> response = waitingService.getMyWaiting(user);
 
         ResponseMessage<List<GetMyWaitingResponse>> responseMessage = ResponseMessage.<List<GetMyWaitingResponse>>builder()
             .statusCode(HttpStatus.CREATED.value())
